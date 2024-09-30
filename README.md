@@ -10,10 +10,12 @@
 - [ ] **Introduce Specific Account Types**
   - Create a `SavingsAccount` subclass with:
     - [ ] Interest rate attribute (default value: 0.5% per annum).
+      - [ ] Show Interest rate in account details? 
   - Create a `ChequeAccount` subclass with:
-    - [ ] Limit per cheque attribute (default value: HK$10,000).
+    - [ ] Limit per cheque attribute (default value: HK$10,000). 
+      - [ ] Decline transfer when cheque account over limit
 
-- [ ] **Remove Deposit Functionality**
+- [X] **Remove Deposit Functionality**
   - Eliminate the existing deposit function from the current system.
 
 - [ ] **Implement Fund Transfer Function**
@@ -33,7 +35,3 @@
 ### Documentation
 - [ ] Update README with detailed instructions on new features.
 - [ ] Document code changes with comments and Javadoc.
-
-### Future Considerations
-- [ ] Evaluate potential enhancements for user experience.
-- [ ] Consider adding support for multiple currencies in future iterations.
