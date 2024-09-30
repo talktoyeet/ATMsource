@@ -5,4 +5,9 @@ public class SavingAccount extends Account{
         super(accountNumber, pin, availableBalance, totalBalance); // Call the parent constructor
         this.interestRate = interestRate;
     }
+
+    public SavingAccount(int accountNumber, int pin, double availableBalance, double totalBalance){
+        super(accountNumber, pin, availableBalance, totalBalance); // Call the parent constructor
+        this.interestRate = 0.5;
+    }
 }
