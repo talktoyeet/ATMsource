@@ -92,20 +92,17 @@ public class Withdrawal extends Transaction
       Screen screen = getScreen(); // get screen reference
       
       // array of amounts to correspond to menu numbers
-      int amounts[] = { 0, 10, 20, 50, 100, 500, 1000 };
+      int amounts[] = { 100, 500, 1000 };
 
       // loop while no valid choice has been made
       while ( userChoice == 0 )
       {
          // display the menu
          screen.displayMessageLine( "\nWithdrawal Menu:" );
-         screen.displayMessageLine( "1 - $10" );
-         screen.displayMessageLine( "2 - $20" );
-         screen.displayMessageLine( "3 - $50" );
-         screen.displayMessageLine( "4 - $100" );
-         screen.displayMessageLine( "5 - $500" );
-         screen.displayMessageLine( "6 - $1000" );
-         screen.displayMessageLine( "7 - Cancel transaction" );
+         screen.displayMessageLine( "1 - $100" );
+         screen.displayMessageLine( "2 - $500" );
+         screen.displayMessageLine( "3 - $1000" );
+         screen.displayMessageLine( "4 - Cancel transaction" );
          screen.displayMessage( "\nChoose a withdrawal amount: " );
 
          int input = keypad.getInput(); // get user input through keypad
