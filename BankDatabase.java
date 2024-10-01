@@ -11,7 +11,7 @@ public class BankDatabase
       accounts = new Account[ 3 ]; // just 3 accounts for testing
       accounts[ 0 ] = new Account( 12345, 54321, 1000.0, 1200.0 );
       accounts[ 1 ] = new Account( 98765, 56789, 200.0, 200.0 );
-      accounts[ 2 ] = new SavingAccount(23456, 65432, 20000, 25000, 2);
+      accounts[ 2 ] = new SavingAccount(23456, 65432, 20000, 25000, 2); //SavingAccount with 2% interest
    } // end no-argument BankDatabase constructor
    
    // retrieve Account object containing specified account number
@@ -41,6 +41,10 @@ public class BankDatabase
       else
          return false; // account number not found, so return false
    } // end method authenticateUser
+
+   public boolean accountExists(int userAccountNumber) {
+     return getAccount(userAccountNumber) != null; //Return false if getAccount return null
+   }
 
    // return available balance of Account with specified account number
    public double getAvailableBalance( int userAccountNumber )
