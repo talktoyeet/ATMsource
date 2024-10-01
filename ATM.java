@@ -13,6 +13,7 @@ public class ATM
    // constants corresponding to main menu options
    private static final int BALANCE_INQUIRY = 1;
    private static final int WITHDRAWAL = 2;
+   private static final int TRANSFER = 3;
    private static final int EXIT = 4;
 
    // no-argument ATM constructor initializes instance variables
@@ -88,6 +89,7 @@ public class ATM
             // user chose to perform one of three transaction types
             case BALANCE_INQUIRY: 
             case WITHDRAWAL:
+            case TRANSFER:
 
                // initialize as new object of chosen type
                currentTransaction = 
@@ -134,6 +136,10 @@ public class ATM
          case WITHDRAWAL: // create new Withdrawal transaction
             temp = new Withdrawal( currentAccountNumber, screen, 
                bankDatabase, keypad, cashDispenser );
+            break;
+         case TRANSFER:
+            temp = new Transfer(
+                currentAccountNumber, screen, bankDatabase, keypad);
             break;
       } // end switch
 
