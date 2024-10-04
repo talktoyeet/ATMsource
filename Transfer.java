@@ -1,6 +1,9 @@
-public class Transfer extends Transaction{
+public class Transfer extends Transaction
+{
   private double amount;
   private Keypad keypad;
+
+  private final static int CANCELED = 0;
 
   public Transfer(int remitterAccountNumber, Screen atmScreen, BankDatabase atmBankDatabase, Keypad atmKeypad){
     super(remitterAccountNumber, atmScreen, atmBankDatabase);
@@ -19,7 +22,7 @@ public class Transfer extends Transaction{
       int beneficiaryAccountNumber = getBeneficiaryAccountNumber();
       amount = getTransferAmount();
 
-      if(amount > 0){
+      if(amount != CANCELED){
 
         availableBalance = bankDatabase.getAvailableBalance(getAccountNumber());
 
@@ -32,8 +35,9 @@ public class Transfer extends Transaction{
         else{
           screen.displayMessageLine("Insufficient funds in your account."); 
         }
+
       }
-      else{
+      else {
         screen.displayMessageLine("Transaction canceled");
         transferCompleted = true;
       }
@@ -48,22 +52,35 @@ public class Transfer extends Transaction{
     boolean validAccountNumber = false;
     int accountNumber;
     while(!validAccountNumber){
-      screen.displayMessageLine("Enter beneficiary account number");
+      screen.displayMessageLine("Enter beneficiary account number: ");
       accountNumber = keypad.getInput();
 
         if(bankDatabase.accountExists(accountNumber) != false){ 
           validAccountNumber = true; return accountNumber;}
 
-        else { screen.displayMessageLine("Account Number not found! Please try again."); }
+        else { screen.displayMessageLine("Account not found! Please try again."); }
     }
     return 0;
   }
 
-  private double getTransferAmount(){
+private double getTransferAmount() {
     Screen screen = getScreen();
+    double input = -1; // Initialize to an invalid value
+    boolean validInput = false;
 
-    screen.displayMessageLine("Enter transfer amount: ");
-    return keypad.getInput();
-  }
+    while (!validInput) {
+        screen.displayMessageLine("Enter transfer amount: ");
 
+            input = keypad.getInput();
+
+            if (input < 0) { // Check for zero or negative values
+                screen.displayMessageLine("Transfer amount must be greater than 0.");
+            } else {
+                validInput = true; // Valid input received
+            }
+        }     
+
+    return input;
+  } 
 }
+
