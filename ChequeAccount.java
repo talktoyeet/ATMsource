@@ -1,14 +1,25 @@
 public class ChequeAccount extends Account{
-    private int limit;
+    private double chequeLimit;
 
-    public ChequeAccount(int accountNumber, int pin, double availableBalance, double totalBalance, int limit){
+    public ChequeAccount(int accountNumber, int pin, double availableBalance, double totalBalance, double limit){
         super(accountNumber, pin, availableBalance, totalBalance); // Call the parent constructor
-        this.limit = limit;
+        this.chequeLimit = limit;
     }
 
     public ChequeAccount(int accountNumber, int pin, double availableBalance, double totalBalance){
         super(accountNumber, pin, availableBalance, totalBalance); // Call the parent constructor
-        this.limit = 10000;
+        this.chequeLimit = 10000;
     }
+    
+    public double getChequeLimit()
+    {
+      return chequeLimit;
+    }
+
+    public void setChequeLimit( double amount )
+    {
+      chequeLimit = amount;
+    }
+
 }
 
