@@ -8,10 +8,9 @@ public class BankDatabase
    // no-argument BankDatabase constructor initializes accounts
    public BankDatabase()
    {
-      accounts = new Account[ 4 ]; // just 3 accounts for testing
-      accounts[ 0 ] = new Account( 12345, 54321, 1000.0, 1200.0 );
-      accounts[ 1 ] = new SavingAccount(23456, 65432, 20000, 25000, 2); //SavingAccount with 2% interest
-      accounts[ 2 ] = new ChequeAccount(34567, 76543, 20000, 25000, 5000);
+      accounts = new Account[ 4 ]; // just 2 accounts for testing
+      accounts[ 0 ] = new SavingAccount(23456, 65432, 20000, 25000, 2); //SavingAccount with 2% interest
+      accounts[ 1 ] = new ChequeAccount(34567, 76543, 20000, 25000, 5000); //ChequeAccount with limit 5000
    } // end no-argument BankDatabase constructor
    
    // retrieve Account object containing specified account number
@@ -27,6 +26,12 @@ public class BankDatabase
 
       return null; // if no matching account was found, return null
    } // end method getAccount
+   
+   // return String of account class name
+   public String getAccountType( int userAccountNumber )
+   {
+      return getAccount( userAccountNumber ).getAccountType();
+   }
 
    // determine whether user-specified account number and PIN match
    // those of an account in the database
@@ -57,6 +62,21 @@ public class BankDatabase
    {
       return getAccount( userAccountNumber ).getTotalBalance();
    } // end method getTotalBalance
+   //
+   public double getInterestRate( int userAccountNumber )
+   {
+      if (getAccount( userAccountNumber ) instanceof SavingAccount) 
+      {
+        SavingAccount savingAccount = (SavingAccount) getAccount( userAccountNumber ); // Downcasting
+        return savingAccount.getInterestRate(); // Call the method on the SavingAccount instance
+      } 
+
+      else
+      {
+        throw new IllegalArgumentException("Account is not a Saving Account.");
+      }
+   }
+   
 
    // credit an amount to Account with specified account number
    public void credit( int userAccountNumber, double amount )
@@ -69,6 +89,7 @@ public class BankDatabase
    {
       getAccount( userAccountNumber ).debit( amount );
    } // end method debit
+   
 } // end class BankDatabase
 
 

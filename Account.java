@@ -57,7 +57,13 @@ public class Account
    {
       return accountNumber;  
    } // end method getAccountNumber
-} // end class Account
+ // end class Account
+   public String getAccountType()
+   {
+      return this.getClass().getName();
+   }
+
+}
 
 
 /**************************************************************************
