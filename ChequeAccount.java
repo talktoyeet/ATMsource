@@ -24,7 +24,7 @@ public class ChequeAccount extends Account{
      //Issues a cheque
        public void issueCheque(double amount){
         if (amount > chequeLimit){
-            System.out.println("Cheque amount exceeds the limit of HK$" + this.chequeLimit);
+            System.out.println("Cheque amount exceeds the limit of HK$" + this.chequeLimit + ".");
         }
         else{
             debit(amount); //Debit the amount from the account
