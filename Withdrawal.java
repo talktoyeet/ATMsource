@@ -22,7 +22,32 @@ public class Withdrawal extends Transaction
       keypad = atmKeypad;
       cashDispenser = atmCashDispenser;
    } // end Withdrawal constructor
-
+    public void showMoney(){
+        int temp = amount;
+        int a=0, b=0, c=0;
+        do
+        {
+            temp-=100;
+            a=a+1;
+        }while(temp>=100);
+        do
+        {
+            temp-=500;
+            b=b+1;
+        }while(temp>=500);
+        do
+        {
+            temp-=1000;
+            c=c+1;
+        }while(temp>=1000);
+        Screen screen = getScreen();
+        screen.displayMessageLine("You took:");
+        screen.displayMessageLine("HKD$100 "+ Integer.toString(c));
+        screen.displayMessageLine("HKD$500 "+ Integer.toString(b));
+        screen.displayMessageLine("HKD$1000 "+ Integer.toString(a));
+        screen.displayMessageLine("****************************************************");
+    }
+    
    // perform transaction
    public void execute()
    {
@@ -36,6 +61,8 @@ public class Withdrawal extends Transaction
       // loop until cash is dispensed or the user cancels
       do
       {
+          
+          
          // obtain a chosen withdrawal amount from the user 
          amount = displayMenuOfAmounts();
          
@@ -57,7 +84,8 @@ public class Withdrawal extends Transaction
                   
                   cashDispenser.dispenseCash( amount ); // dispense cash
                   cashDispensed = true; // cash was dispensed
-
+                  
+                  showMoney();
                   // instruct user to take cash
                   screen.displayMessageLine( 
                      "\nPlease take your cash now." );
