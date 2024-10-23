@@ -8,7 +8,7 @@ public class Withdrawal extends Transaction
    private CashDispenser cashDispenser; // reference to cash dispenser
 
    // constant corresponding to menu option to cancel
-   private final static int CANCELED = 4;
+   private final static int CANCELED = 5;
 
    // Withdrawal constructor
    public Withdrawal( int userAccountNumber, Screen atmScreen, 
@@ -105,7 +105,8 @@ public class Withdrawal extends Transaction
          screen.displayMessageLine( "1 - $100" );
          screen.displayMessageLine( "2 - $500" );
          screen.displayMessageLine( "3 - $1000" );
-         screen.displayMessageLine( "4 - Cancel transaction" );
+         screen.displayMessageLine( "4 - Other Amount" );
+         screen.displayMessageLine( "5 - Cancel transaction" );
          screen.displayMessage( "\nChoose a withdrawal amount: " );
 
          int input = keypad.getInput(); // get user input through keypad
@@ -116,17 +117,31 @@ public class Withdrawal extends Transaction
             case 1: // if the user chose a withdrawal amount 
             case 2: // (i.e., chose option 1, 2, 3, 4 or 5), return the
             case 3: // corresponding amount from amounts array
-               userChoice = amounts[ input ]; // save user's choice
-               break;       
+               userChoice = amounts[ (int)input ]; // save user's choice
+               break;
             case CANCELED: // the user chose to cancel
                userChoice = CANCELED; // save user's choice
                break;
+            case 4:
+               screen.displayMessageLine( "\nInput your withdrawal amount:" );
+               double other = keypad.getInput();
+               if(!(other % 100 == 0)){
+                  screen.displayMessageLine( "\nUnsucessful withdrawal amount(only the multiples of HK$100 allowed)" );
+                  continue;
+               }
+               else if (other <= 0) {
+                  screen.displayMessageLine( "\nUnsucessful withdrawal amount(amount of $0)" );
+               }else{
+                  userChoice = (int)other;
+               }
+
+               break;
             default: // the user did not enter a value from 1-6
-               screen.displayMessageLine( 
-                  "\nIvalid selection. Try again." );
+               screen.displayMessageLine(
+                       "\nInvalid selection. Try again." );
          } // end switch
       } // end while
-
+      
       return userChoice; // return withdrawal amount or CANCELED
    } // end method displayMenuOfAmounts
    
