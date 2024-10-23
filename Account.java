@@ -1,12 +1,14 @@
 // Account.java
 // Represents a bank account
 
-public class Account 
+public abstract class Account
 {
    private int accountNumber; // account number
    private int pin; // PIN for authentication
    protected double availableBalance; // funds available for withdrawal
    protected double totalBalance; // funds available + pending deposits
+   protected boolean interestAvailable = false;
+   protected boolean limitperchequeAvailable = false;
 
    // Account constructor initializes attributes
    public Account( int theAccountNumber, int thePIN, 
@@ -61,6 +63,14 @@ public class Account
    public String getAccountType()
    {
       return this.getClass().getName();
+   }
+   
+   public boolean hasInterest(){
+       return interestAvailable;
+   }
+   
+   public boolean hasLimitpercheque(){
+       return limitperchequeAvailable;
    }
 
 }
