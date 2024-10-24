@@ -12,7 +12,7 @@ public class BankDatabase
       accounts[ 0 ] = new SavingAccount(23456, 65432, 20000, 25000, 5); //SavingAccount with 5% interest
       accounts[ 1 ] = new SavingAccount(1, 1, 70000, 40000, 5);
       accounts[ 2 ] = new ChequeAccount(34567, 76543, 20000, 25000, 10000); //ChequeAccount with limit 10000
-      accounts[ 3 ] = new ChequereAccount(2, 2, 93000, 34000, 10000);
+      accounts[ 3 ] = new ChequeAccount(2, 2, 93000, 34000, 10000);
       
    } // end no-argument BankDatabase constructor
    
