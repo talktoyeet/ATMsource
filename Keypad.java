@@ -1,37 +1,37 @@
-// Keypad.java
-// Represents the keypad of the ATM
 import java.util.Scanner; // program uses Scanner to obtain user input
 
-public class Keypad
-{
-   private Scanner input; // reads data from the command line
-   private boolean passwordChecked = false;                      
-   // no-argument constructor initializes the Scanner
-   public Keypad()
-   {
-      input = new Scanner( System.in );    
-   } // end no-argument Keypad constructor
+public class Keypad {
+    private Scanner input; // reads data from the command line
+    private boolean passwordChecked = false;
 
-   // return an integer value entered by user 
-   public int getInput()
-   {
-      return input.nextInt(); // we assume that user enters an integer  
-   } // end method getInput
-} // end class Keypad  
+    // no-argument constructor initializes the Scanner
+    public Keypad() {
+        input = new Scanner(System.in);
+    } // end no-argument Keypad constructor
 
+    // return an integer value entered by user 
+    public int getInput() {
+        int userInput = 0;
+        boolean validInput = false;
 
+        while (!validInput) {
+            System.out.print("\nPlease enter an integer  ");
+            System.out.print("(or 'q' to quit):");
+            String userInputString = input.nextLine(); // read user input as a string
 
-/**************************************************************************
- * (C) Copyright 1992-2007 by Deitel & Associates, Inc. and               *
- * Pearson Education, Inc. All Rights Reserved.                           *
- *                                                                        *
- * DISCLAIMER: The authors and publisher of this book have used their     *
- * best efforts in preparing the book. These efforts include the          *
- * development, research, and testing of the theories and programs        *
- * to determine their effectiveness. The authors and publisher make       *
- * no warranty of any kind, expressed or implied, with regard to these    *
- * programs or to the documentation contained in these books. The authors *
- * and publisher shall not be liable in any event for incidental or       *
- * consequential damages in connection with, or arising out of, the       *
- * furnishing, performance, or use of these programs.                     *
- *************************************************************************/
+            // Check if the user wants to quit
+            if (userInputString.equalsIgnoreCase("q")) {
+                System.out.println("Exiting the program.");
+                System.exit(0); // terminate the program
+            }
+
+            try {
+                userInput = Integer.parseInt(userInputString); // attempt to convert string to integer
+                validInput = true; // input is valid, exit loop
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer."); // error message
+            }
+        }
+        return userInput; // return the valid integer
+    } // end method getInput
+} // end class Keypad
