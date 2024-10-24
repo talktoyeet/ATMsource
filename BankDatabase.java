@@ -9,8 +9,8 @@ public class BankDatabase
    public BankDatabase()
    {
       accounts = new Account[ 4 ]; // just 2 accounts for testing
-      accounts[ 0 ] = new SavingAccount(23456, 65432, 20000, 25000, 2); //SavingAccount with 2% interest
-      accounts[ 1 ] = new ChequeAccount(34567, 76543, 20000, 25000, 5000); //ChequeAccount with limit 5000
+      accounts[ 0 ] = new SavingAccount(23456, 65432, 20000, 25000, 5); //SavingAccount with 5% interest
+      accounts[ 1 ] = new ChequeAccount(34567, 76543, 20000, 25000, 10000); //ChequeAccount with limit 10000
    } // end no-argument BankDatabase constructor
    
    // retrieve Account object containing specified account number
