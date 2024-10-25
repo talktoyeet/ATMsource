@@ -51,9 +51,9 @@ public class ATM
    private void authenticateUser() 
    {
       screen.displayMessage( "\nPlease enter your account number: " );
-      int accountNumber = keypad.getInput(); // input account number
+      int accountNumber = keypad.getPositiveInteger(); // input account number
       screen.displayMessage( "\nEnter your PIN: " ); // prompt for PIN
-      int pin = keypad.getInput(); // input PIN
+      int pin = keypad.getPositiveInteger(); // input PIN
       
       // set userAuthenticated to boolean value returned by database
       userAuthenticated = 
@@ -118,7 +118,7 @@ public class ATM
       screen.displayMessageLine( "3 - Transfer" );
       screen.displayMessageLine( "4 - Exit\n" );
       screen.displayMessage( "Enter a choice: " );
-      return keypad.getInput(); // return user's selection
+      return keypad.getPositiveInteger(); // return user's selection
    } // end method displayMainMenu
          
    // return object of specified Transaction subclass
