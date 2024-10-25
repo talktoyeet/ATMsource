@@ -103,7 +103,7 @@ public class Withdrawal extends Transaction {
         screen.displayMessage("Enter your preferred cash amount (must be in $100, $ 500, or $1000 increments): ");
         
         // Get user input
-        preferredAmount = keypad.getInput(); // Assume this method gets the input as an integer
+        preferredAmount = keypad.getPositiveInteger(); // Assume this method gets the input as an integer
 
         // Validate the preferred amount
         if (preferredAmount > 0 && preferredAmount <= MAX_WITHDRAWAL && 
@@ -143,7 +143,7 @@ public class Withdrawal extends Transaction {
             screen.displayMessageLine("5 - Cancel transaction");
             screen.displayMessage("\nChoose a withdrawal amount: ");
 
-            int input = keypad.getInput(); // get user input through keypad
+            int input = keypad.getPositiveInteger(); // get user input through keypad
 
             // determine how to proceed based on the input value
             switch (input) {
