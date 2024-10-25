@@ -46,7 +46,7 @@ public class Transfer extends Transaction {
         while (true) { // Loop until a valid account number is entered
             screen.displayMessageLine("Enter beneficiary account number: ");
             screen.displayMessageLine("0 - Cancel transaction");
-            accountNumber = keypad.getInput(); // Get input from keypad
+            accountNumber = keypad.getPositiveInteger(); // Get input from keypad
 
             if (accountNumber == 0) {
                 return CANCELED; // Return canceled constant if user chooses to cancel
@@ -70,7 +70,7 @@ public class Transfer extends Transaction {
             screen.displayMessageLine("Enter transfer amount: ");
             screen.displayMessageLine("0 - Cancel transaction");
 
-            input = keypad.getInput(); // Get input from keypad
+            input = keypad.getPositiveDecimal(); // Get input from keypad
             if (input == 0) {
                 return CANCELED; // Return canceled constant if user chooses to cancel
             }
@@ -94,7 +94,7 @@ public class Transfer extends Transaction {
         screen.displayMessageLine("2 - Re-enter details");
         screen.displayMessageLine("0 - Cancel transaction");
 
-        int input = keypad.getInput(); // Get confirmation input from keypad
+        int input = keypad.getPositiveInteger(); // Get confirmation input from keypad
 
         switch (input) {
             case 1: // User confirms transfer
