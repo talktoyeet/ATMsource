@@ -20,7 +20,7 @@ public class Transfer extends Transaction {
         while (!transferCompleted) {
             int beneficiaryAccountNumber = getBeneficiaryAccountNumber(); // Get beneficiary account number
             if (beneficiaryAccountNumber == CANCELED) {
-                getScreen().displayMessageLine("Transaction aborted"); // Inform user of cancellation
+                getScreen().displayMessageLine("\nTransaction aborted\n"); // Inform user of cancellation
                 break; // Exit the loop if canceled
             }
 
@@ -28,10 +28,10 @@ public class Transfer extends Transaction {
             if (amount != CANCELED) {
                 transferCompleted = confirmTransfer(beneficiaryAccountNumber, amount); // Confirm the transfer
                 if (transferCompleted) {
-                    getScreen().displayMessageLine("Returning back to menu..."); // Notify user of completion
+                    getScreen().displayMessageLine("\nReturning back to menu...\n"); // Notify user of completion
                 }
             } else {
-                getScreen().displayMessageLine("Transaction canceled"); // Inform user of cancellation
+                getScreen().displayMessageLine("\nTransaction canceled\n"); // Inform user of cancellation
                 transferCompleted = true; // Set flag to true to exit loop
             }
         }
@@ -44,18 +44,18 @@ public class Transfer extends Transaction {
         int accountNumber;
 
         while (true) { // Loop until a valid account number is entered
-            screen.displayMessageLine("0 - Cancel transaction\n");
+            screen.displayMessageLine("\n0 - Cancel transaction\n");
             screen.displayMessageLine("Enter beneficiary account number:");
             accountNumber = keypad.getPositiveInteger(); // Get input from keypad
 
             if (accountNumber == 0) {
                 return CANCELED; // Return canceled constant if user chooses to cancel
             } else if (getAccountNumber() == accountNumber) {
-                screen.displayMessageLine("You are not allowed to transfer to your own account"); // Prevent self-transfer
+                screen.displayMessageLine("\nYou are not allowed to transfer to your own account\n"); // Prevent self-transfer
             } else if (bankDatabase.accountExists(accountNumber)) {
                 return accountNumber; // Return valid beneficiary account number
             } else {
-                screen.displayMessageLine("Account not found! Please try again."); // Prompt for re-entry if invalid
+                screen.displayMessageLine("\nAccount not found! Please try again.\n"); // Prompt for re-entry if invalid
             }
         }
     }
@@ -67,7 +67,7 @@ public class Transfer extends Transaction {
         double input;
 
         while (true) { // Loop until a valid transfer amount is entered
-            screen.displayMessageLine("0 - Cancel transaction\n");
+            screen.displayMessageLine("\n0 - Cancel transaction\n");
             screen.displayMessageLine("Enter transfer amount:");
 
             input = keypad.getPositiveDecimal(); // Get input from keypad
@@ -77,7 +77,7 @@ public class Transfer extends Transaction {
 
             double availableBalance = bankDatabase.getAvailableBalance(getAccountNumber()); // Check available balance
             if (input > availableBalance) {
-                screen.displayMessageLine("Insufficient balance"); // Notify user of insufficient funds
+                screen.displayMessageLine("\nInsufficient balance\n"); // Notify user of insufficient funds
             } else {
                 return input; // Return valid transfer amount
             }
@@ -89,7 +89,7 @@ public class Transfer extends Transaction {
         Screen screen = getScreen(); // Reference to the screen for displaying messages
         BankDatabase bankDatabase = getBankDatabase(); // Reference to bank database for updating balances
 
-        screen.displayMessageLine("You are transferring " + amount + " to account number " + beneficiaryAccountNumber);
+        screen.displayMessageLine("\nYou are transferring " + amount + " to account number " + beneficiaryAccountNumber);
         screen.displayMessageLine("1 - Confirm");
         screen.displayMessageLine("2 - Re-enter details");
         screen.displayMessageLine("0 - Cancel transaction\n");
@@ -100,13 +100,13 @@ public class Transfer extends Transaction {
             case 1: // User confirms transfer
                 bankDatabase.debit(getAccountNumber(), amount); // Debit amount from remitter's account
                 bankDatabase.credit(beneficiaryAccountNumber, amount); // Credit amount to beneficiary's account
-                screen.displayMessageLine("Transfer completed"); // Notify user of successful transfer
+                screen.displayMessageLine("\nTransfer completed\n"); // Notify user of successful transfer
                 return true; 
             case 2: 
-                screen.displayMessageLine("Returning..."); 
+                screen.displayMessageLine("\nReturning...\n"); 
                 return false; 
             case CANCELED: 
-                screen.displayMessageLine("Transaction canceled"); 
+                screen.displayMessageLine("\nTransaction canceled\n"); 
                 return true; 
             default: 
                 return confirmTransfer(beneficiaryAccountNumber, amount); // Retry confirmation on invalid input
