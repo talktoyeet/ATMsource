@@ -44,8 +44,8 @@ public class Transfer extends Transaction {
         int accountNumber;
 
         while (true) { // Loop until a valid account number is entered
-            screen.displayMessageLine("Enter beneficiary account number: ");
             screen.displayMessageLine("0 - Cancel transaction");
+            screen.displayMessageLine("Enter beneficiary account number");
             accountNumber = keypad.getPositiveInteger(); // Get input from keypad
 
             if (accountNumber == 0) {
@@ -67,8 +67,8 @@ public class Transfer extends Transaction {
         double input;
 
         while (true) { // Loop until a valid transfer amount is entered
-            screen.displayMessageLine("Enter transfer amount: ");
             screen.displayMessageLine("0 - Cancel transaction");
+            screen.displayMessageLine("Enter transfer amount");
 
             input = keypad.getPositiveDecimal(); // Get input from keypad
             if (input == 0) {
