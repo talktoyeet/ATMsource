@@ -13,7 +13,6 @@ public class Keypad {
     // return a positive integer value entered by user 
     public int getPositiveInteger() {
         while (true) {
-            System.out.print(" ");
             String userInput = input.nextLine();
 
             if (userInput.equalsIgnoreCase("q")) {
@@ -37,7 +36,6 @@ public class Keypad {
     // return a positive decimal value entered by user with up to two decimal places
     public double getPositiveDecimal() {
         while (true) {
-            System.out.print(" ");
             String userInput = input.nextLine();
 
             if (userInput.equalsIgnoreCase("q")) {
