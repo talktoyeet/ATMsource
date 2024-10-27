@@ -22,7 +22,7 @@ public class Keypad {
 
             try {
                 int value = Integer.parseInt(userInput);
-                if (value > 0) {
+                if (value >= 0) {
                     return value; // return the positive integer
                 } else {
                     System.out.println("Please enter a positive integer.");
@@ -46,7 +46,7 @@ public class Keypad {
             // Validate decimal input with up to two decimal places
             if (userInput.matches("^[0-9]+(\\.[0-9]{1,2})?$")) {
                 double value = Double.parseDouble(userInput);
-                if (value > 0) {
+                if (value >= 0) {
                     return value; // return the positive decimal
                 } else {
                     System.out.println("Please enter a positive decimal number.");
