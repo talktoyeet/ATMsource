@@ -22,7 +22,7 @@ public class Keypad {
 
             try {
                 int value = Integer.parseInt(userInput);
-                if (value >= 0) {
+                if (value >= -1) {
                     return value; // return the positive integer
                 } else {
                     System.out.println("Please enter a positive integer.");
