@@ -1,3 +1,5 @@
+import com.sun.jdi.IntegerValue;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,9 +57,7 @@ public class ATMFrame extends JFrame implements ActionListener {
             textField.clearInput();
 
         } else if (source == keypadPanel.actionButtons[2]) { // Enter Button
-            if (waitingForInput) { // Only process if waiting for input
                 processInput(); // Call method to process the input when Enter is pressed
-            }
         }
     }
 
@@ -81,8 +81,7 @@ public class ATMFrame extends JFrame implements ActionListener {
     }
 
     private void processInput() {
-            String inputValue = textField.getUserInput();
-            finalInput = inputValue;
+            finalInput = textField.getUserInput();
             waitingForInput = false; // Stop waiting for input after processing
             textField.clearInput();
         }
@@ -96,7 +95,12 @@ public class ATMFrame extends JFrame implements ActionListener {
                 throw new RuntimeException(e);
             }
         }
-        return Integer.parseInt(finalInput); // Return parsed integer
+        try {
+            return Integer.parseInt(finalInput); // Return parsed integer
+        } catch (NumberFormatException e){
+            return -1;
+        }
+
     }
 }
 

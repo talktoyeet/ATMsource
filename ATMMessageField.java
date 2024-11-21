@@ -20,6 +20,7 @@ public class ATMMessageField extends JTextArea {
         this.replaceSelection("");
     }
 
+
     public ATMMessageField getDisplay(){
         return this;
     }

@@ -44,6 +44,7 @@ public class Transfer extends Transaction {
         int accountNumber;
 
         while (true) { // Loop until a valid account number is entered
+            screen.clearScreen();
             screen.displayMessageLine("\n0 - Cancel transaction\n");
             screen.displayMessageLine("Enter beneficiary account number:");
             accountNumber = keypad.getPositiveInteger(); // Get input from keypad

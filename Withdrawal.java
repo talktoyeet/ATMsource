@@ -135,8 +135,9 @@ public class Withdrawal extends Transaction {
         // loop while no valid choice has been made
         while (userChoice == 0) {
             // display the menu
-            screen.displayMessageLine("\nWithdrawal Menu:");
-            screen.displayMessageLine("1 - $100");
+            screen.clearScreen();
+            screen.displayMessageLine("Withdrawal Menu:");
+            screen.displayMessageLine("\n1 - $100");
             screen.displayMessageLine("2 - $500");
             screen.displayMessageLine("3 - $1000");
             screen.displayMessageLine("4 - Preferred cash");

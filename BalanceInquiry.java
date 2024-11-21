@@ -33,6 +33,7 @@ public class BalanceInquiry extends Transaction
          bankDatabase.getAccountType( getAccountNumber() );
       
       // display the balance information on the screen
+      screen.clearScreen();
       screen.displayMessageLine( "\nBalance Information:" );
       screen.displayMessage( " - Account type: " );
       screen.displayMessage( accountType );
@@ -47,6 +48,10 @@ public class BalanceInquiry extends Transaction
         screen.displayPercentage( bankDatabase.getInterestRate( getAccountNumber() ) );
       }
 
-      screen.displayMessageLine( "" );
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         throw new RuntimeException(e);
+      }
    } // end method execute
 } // end class BalanceInquiry

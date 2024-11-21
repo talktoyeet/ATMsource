@@ -27,12 +27,14 @@ public class Screen
    public void displayPercentage( double percentage )
   {
       System.out.printf( "%.2f%%", percentage);
+      ATMFrame.appendMessage(String.format("%.2f%%", percentage));
   }
 
    // display a dollar amount
    public void displayDollarAmount( double amount )
    {
-      System.out.printf( "HK$%,.2f", amount );   
+      System.out.printf( "HK$%,.2f", amount );
+      ATMFrame.appendMessage(String.format("HK$%,.2f", amount));
    } // end method displayDollarAmount 
    //
 } // end class Screen

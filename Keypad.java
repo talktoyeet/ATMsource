@@ -12,10 +12,12 @@ public class Keypad {
 
     // return a positive integer value entered by user 
     public int getPositiveInteger() {
-        while (true) {
             return ATMFrame.getInt();
-        }
     }// end method getPositiveInteger
+
+    public void getTest(String input) {
+        System.out.println("Received input: " + input);
+    }
 
     // return a positive decimal value entered by user with up to two decimal places
     public double getPositiveDecimal() {
