@@ -36,8 +36,8 @@ public class ATM
          // loop while user is not yet authenticated
          while ( !userAuthenticated )
          {
-            screen.displayMessageLine( "\nWelcome!" );
-            ATMFrame.setAndClearMessageField("Welcome!");
+            screen.clearScreen();
+            screen.displayMessageLine( "Welcome!" );
             authenticateUser(); // authenticate user
          } // end while
          
@@ -49,28 +49,35 @@ public class ATM
    } // end method run
 
    // attempts to authenticate user against database
-   private void authenticateUser() 
-   {
-      screen.displayMessage( "\nPlease enter your account number: " );
-      ATMFrame.appendMessage("Please enter your account number ");
+   private void authenticateUser() {
+      screen.displayMessage("\nPlease enter your account number: ");
 
-      int accountNumber = keypad.getPositiveInteger(); // input account number
-      screen.displayMessage( "\nEnter your PIN: " ); // prompt for PIN
-      int pin = keypad.getPositiveInteger(); // input PIN
-      
+      int accountNumber = ATMFrame.getInt();// input account number
+      screen.displayMessage("\nEnter your PIN: "); // prompt for PIN
+
+      int pin = ATMFrame.getInt();
+      ;// input PIN
+
       // set userAuthenticated to boolean value returned by database
-      userAuthenticated = 
-         bankDatabase.authenticateUser( accountNumber, pin );
-      
+      userAuthenticated =
+              bankDatabase.authenticateUser(accountNumber, pin);
+
       // check whether authentication succeeded
-      if ( userAuthenticated )
-      {
+      if (userAuthenticated) {
          currentAccountNumber = accountNumber; // save user's account #
       } // end if
-      else
-         screen.displayMessageLine( 
-             "Invalid account number or PIN. Please try again." );
-   } // end method authenticateUser
+      else {
+         screen.clearScreen();
+         screen.displayMessageLine(
+                 "Invalid account number or PIN. Please try again.");
+         screen.displayMessageLine("Returning...");
+         try {
+            Thread.sleep(3000);
+         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+         }
+      }
+   }// end method authenticateUser
 
    // display the main menu and perform transactions
    private void performTransactions() 
@@ -115,7 +122,8 @@ public class ATM
    // display the main menu and return an input selection
    private int displayMainMenu()
    {
-      screen.displayMessageLine( "\nMain menu:" );
+      screen.clearScreen();
+      screen.displayMessageLine( "Main menu:" );
       screen.displayMessageLine( "1 - View my balance" );
       screen.displayMessageLine( "2 - Withdraw cash" );
       screen.displayMessageLine( "3 - Transfer" );

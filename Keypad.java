@@ -13,25 +13,9 @@ public class Keypad {
     // return a positive integer value entered by user 
     public int getPositiveInteger() {
         while (true) {
-            String userInput = input.nextLine();
-
-            if (userInput.equalsIgnoreCase("q")) {
-                System.out.println("\nExiting the program.");
-                System.exit(0); // terminate the program
-            }
-
-            try {
-                int value = Integer.parseInt(userInput);
-                if (value >= -1) {
-                    return value; // return the positive integer
-                } else {
-                    System.out.println("Please enter a positive integer.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a positive integer.");
-            }
+            return ATMFrame.getInt();
         }
-    } // end method getPositiveInteger
+    }// end method getPositiveInteger
 
     // return a positive decimal value entered by user with up to two decimal places
     public double getPositiveDecimal() {

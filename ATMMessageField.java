@@ -16,7 +16,8 @@ public class ATMMessageField extends JTextArea {
 
     // Method to clear all messages
     public void clearScreen(){
-        this.setText("");
+        this.selectAll();
+        this.replaceSelection("");
     }
 
     public ATMMessageField getDisplay(){

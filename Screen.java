@@ -6,15 +6,24 @@ public class Screen
    // displays a message without a carriage return
    public void displayMessage( String message ) 
    {
-      System.out.print( message ); 
+      System.out.print( message );
+      ATMFrame.appendMessage( message );
    } // end method displayMessage
 
    // display a message with a carriage return
    public void displayMessageLine( String message ) 
    {
-      System.out.println( message );   
+      System.out.println( message );
+      ATMFrame.appendMessage( message );
    } // end method displayMessageLine
-   //
+
+    public void clearScreen()
+    {
+
+        ATMFrame.messageField.clearScreen();
+
+    }
+
    public void displayPercentage( double percentage )
   {
       System.out.printf( "%.2f%%", percentage);
