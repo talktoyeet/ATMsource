@@ -34,9 +34,10 @@ public class ATM
       while ( true )
       {
          // loop while user is not yet authenticated
-         while ( !userAuthenticated ) 
+         while ( !userAuthenticated )
          {
-            screen.displayMessageLine( "\nWelcome!" );       
+            screen.displayMessageLine( "\nWelcome!" );
+            ATMFrame.setAndClearMessageField("Welcome!");
             authenticateUser(); // authenticate user
          } // end while
          
@@ -51,6 +52,8 @@ public class ATM
    private void authenticateUser() 
    {
       screen.displayMessage( "\nPlease enter your account number: " );
+      ATMFrame.appendMessage("Please enter your account number ");
+
       int accountNumber = keypad.getPositiveInteger(); // input account number
       screen.displayMessage( "\nEnter your PIN: " ); // prompt for PIN
       int pin = keypad.getPositiveInteger(); // input PIN
