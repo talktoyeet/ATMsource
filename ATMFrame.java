@@ -127,6 +127,8 @@ public class ATMFrame extends JFrame implements ActionListener {
                     break;
                 case TRANSFER:
                     GlobalState.ATMState = "Transfer";
+                    temp = new Transfer( currentAccountNumber, screen, bankDatabase, keypad);
+                    temp.execute(0);
                     break;
                 case EXIT: // user chose to terminate session
                     screen.displayMessageLine( "\nExiting the system..." );
@@ -212,6 +214,20 @@ public class ATMFrame extends JFrame implements ActionListener {
                 temp.execute(input);
             }
 
+        }
+        else if("Transfer".equals(GlobalState.ATMState)){
+            if("waitingInput".equals(temp.getState())){
+                int input = 0;
+                try {
+                    input = Integer.parseInt(text);
+                } catch (NumberFormatException e) {
+                    return;
+                }
+                temp.execute(input);
+            }
+            else if("waitingConfirmation".equals(temp.getState())){
+                temp.execute(0);
+            }
         }
     }
 
