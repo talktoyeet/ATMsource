@@ -4,7 +4,8 @@ import java.awt.*;
 public class ATMMessageField extends JTextArea {
     ATMMessageField() {
         this.setEditable(false); // Make it read-only
-        this.setFont(new Font("Arial", Font.PLAIN, 16));
+        this.setFont(new Font("Arial", Font.BOLD, 18));
+        this.setForeground(Color.yellow);
         this.setLineWrap(true);
         this.setWrapStyleWord(true);
     }
