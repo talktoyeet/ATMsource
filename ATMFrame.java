@@ -86,7 +86,7 @@ public class ATMFrame extends JFrame implements ActionListener {
                 screen.displayMessageLine("Authentication successful.");
                 accountNumber = 0; // Reset account number
                 isPinInput = false; // Reset flag for next authentication attempt
-                userAuthenticated = true; // Reset authentication status
+                userAuthenticated = true;
                 displayMainMenu();
             } else {
                 screen.displayMessageLine("Invalid account number or PIN. Please try again.");
@@ -131,11 +131,18 @@ public class ATMFrame extends JFrame implements ActionListener {
                     temp.execute(0);
                     break;
                 case EXIT: // user chose to terminate session
+                    screen.clearScreen();
                     screen.displayMessageLine( "\nExiting the system..." );
+                    screen.displayMessageLine("\nWelcome!");
+                    screen.displayMessage("\nPlease enter your account number: ");
+                    GlobalState.ATMState = "login";
+                    userAuthenticated = false;
                     break;
                 default: // user did not enter an integer from 1-4
+                    screen.clearScreen();
                     screen.displayMessageLine(
-                            "\nYou did not enter a valid selection. Try again." );
+                    "\nYou did not enter a valid selection. Press enter to try again." );
+                    GlobalState.ATMState = "returning";
                     break;
             } // end switch
     }
@@ -152,7 +159,25 @@ public class ATMFrame extends JFrame implements ActionListener {
         }
 
         if (source == keypadPanel.actionButtons[0]) { // Cancel Button
-            textField.clearInput();
+            if("login".equals(GlobalState.ATMState)){
+                screen.clearScreen();
+                screen.displayMessageLine("\nWelcome!");
+                screen.displayMessage("\nPlease enter your account number: ");
+                accountNumber = 0; // Reset account number
+                isPinInput = false; // Reset flag for next authentication attempt
+                userAuthenticated = false;
+            }
+
+            else if("Menu".equals(GlobalState.ATMState)){
+                screen.clearScreen();
+                screen.displayMessageLine("\nWelcome!");
+                screen.displayMessage("\nPlease enter your account number: ");
+                GlobalState.ATMState = "login";
+            }
+
+            else{
+                displayMainMenu();
+            }
 
         } else if (source == keypadPanel.actionButtons[1]) { // Clear Button
             textField.clearInput();
