@@ -1,4 +1,6 @@
 import javax.swing.*;
+
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,15 +31,18 @@ public class ATMFrame extends JFrame implements ActionListener {
     private ATMFrame() {
         keypadPanel = new KeypadPanel(this);
         // Set Frame dimension
-        this.setSize(500, 600);
-        this.setSize(1000, 1000); // Increased size for more space
+        this.setSize(600, 600);
+        this.setSize(500, 700); // Increased size for more space
         this.setLayout(null); // Use null layout
+        this.setResizable(false);
+        this.setBackground(Color.BLUE);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set bounds for components
-        messageField.setBounds(50, 50, 900, 300); // Large enough for approximately 15 lines
-        textField.setBounds(50, 360, 900, 50); // Positioned below the message field
-        keypadPanel.setBounds(50, 420, 900, 500); // Positioned below the text field
+        messageField.setBounds(50, 50, 400, 300); // Large enough for approximately 15 lines
+        messageField.setBackground(Color.BLUE);
+        textField.setBounds(50, 360, 400, 50); // Positioned below the message field
+        keypadPanel.setBounds(50, 420, 400, 200); // Positioned below the text field
 
         // Add components
         this.add(messageField);
@@ -147,46 +152,50 @@ public class ATMFrame extends JFrame implements ActionListener {
             } // end switch
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
+   @Override
+public void actionPerformed(ActionEvent e) {
+    Object source = e.getSource();
 
-        for (int i = 0; i < 10; i++) {
-            if (source == keypadPanel.numberButtons[i]) { // Check if a number button was pressed
-                textField.appendInput(String.valueOf(i)); // Append pressed number to userInput
-                return;
-            }
-        }
-
-        if (source == keypadPanel.actionButtons[0]) { // Cancel Button
-            if("login".equals(GlobalState.ATMState)){
-                screen.clearScreen();
-                screen.displayMessageLine("\nWelcome!");
-                screen.displayMessage("\nPlease enter your account number: ");
-                accountNumber = 0; // Reset account number
-                isPinInput = false; // Reset flag for next authentication attempt
-                userAuthenticated = false;
-            }
-
-            else if("Menu".equals(GlobalState.ATMState)){
-                screen.clearScreen();
-                screen.displayMessageLine("\nWelcome!");
-                screen.displayMessage("\nPlease enter your account number: ");
-                GlobalState.ATMState = "login";
-            }
-
-            else{
-                displayMainMenu();
-            }
-
-        } else if (source == keypadPanel.actionButtons[1]) { // Clear Button
-            textField.clearInput();
-
-        } else if (source == keypadPanel.actionButtons[2]) { // Enter Button
-            handler(textField.getUserInput());
-            textField.clearInput();
+    for (int i = 0; i < 10; i++) {
+        if (source == keypadPanel.numberButtons[i]) { // Check if a number button was pressed
+            textField.appendInput(String.valueOf(i)); // Append pressed number to userInput
+            return;
         }
     }
+
+    if (source == keypadPanel.actionButtons[0]) { // Cancel Button
+        if ("login".equals(GlobalState.ATMState)) {
+            screen.clearScreen();
+            screen.displayMessageLine("\nWelcome!");
+            screen.displayMessage("\nPlease enter your account number: ");
+            accountNumber = 0; // Reset account number
+            isPinInput = false; // Reset flag for next authentication attempt
+            userAuthenticated = false;
+        } else if ("Menu".equals(GlobalState.ATMState)) {
+            screen.clearScreen();
+            screen.displayMessageLine("\nWelcome!");
+            screen.displayMessage("\nPlease enter your account number: ");
+            GlobalState.ATMState = "login";
+        } else {
+            displayMainMenu();
+        }
+
+    } else if (source == keypadPanel.actionButtons[1]) { // Clear Button
+        textField.clearInput();
+
+    } else if (source == keypadPanel.actionButtons[2]) { // Enter Button
+        handler(textField.getUserInput());
+        textField.clearInput();
+
+    } else if (source == keypadPanel.numberButtons[10]) { // Decimal Button
+        if (!textField.getUserInput().contains(".")) {
+            textField.appendInput("."); // Append decimal point to user input
+        }
+
+    } else if (source == keypadPanel.numberButtons[11]) { // "00" Button
+        textField.appendInput("00"); // Append "00" to user input
+    }
+}
 
     private void handler(String text){
         System.out.println(GlobalState.ATMState);
@@ -221,7 +230,7 @@ public class ATMFrame extends JFrame implements ActionListener {
         else if("Withdrawal".equals(GlobalState.ATMState)){
             System.out.println(temp.getState());
             if("waitingChoice".equals(temp.getState())){
-                int input = 0;
+             int input = 0;
                 try {
                     input = Integer.parseInt(text);
                 } catch (NumberFormatException e) {
@@ -273,5 +282,7 @@ public class ATMFrame extends JFrame implements ActionListener {
         messageField.clearScreen();
         messageField.appendMessage(text);
     }
+    
+    
 }
 
