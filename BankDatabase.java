@@ -92,5 +92,17 @@ public class BankDatabase
    {
       getAccount( userAccountNumber ).debit( amount );
    } // end method debit
+
+   public boolean supportOverdrawn(int userAccountNumber)
+   {
+       return getAccount(userAccountNumber).hasLimitpercheque();
+   }
+   
+   public double accountOverdrawnLimit(int userAccountNumber)
+   {
+      if  (supportOverdrawn(userAccountNumber)){
+      return ((ChequeAccount) getAccount(userAccountNumber)).getChequeLimit();
+      }else return 0;
+   } 
    
 } // end class BankDatabase

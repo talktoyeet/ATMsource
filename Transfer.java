@@ -37,14 +37,12 @@ public class Transfer extends Transaction {
         }
     }
 
-    // Get the beneficiary account number from user input
     private int getBeneficiaryAccountNumber() {
         Screen screen = getScreen(); // Reference to the screen for displaying messages
         BankDatabase bankDatabase = getBankDatabase(); // Reference to bank database for account validation
         int accountNumber;
 
         while (true) { // Loop until a valid account number is entered
-            screen.clearScreen();
             screen.displayMessageLine("\n0 - Cancel transaction\n");
             screen.displayMessageLine("Enter beneficiary account number:");
             accountNumber = keypad.getPositiveInteger(); // Get input from keypad
@@ -55,7 +53,12 @@ public class Transfer extends Transaction {
                 screen.displayMessageLine("\nYou are not allowed to transfer to your own account\n"); // Prevent self-transfer
             } else if (bankDatabase.accountExists(accountNumber)) {
                 return accountNumber; // Return valid beneficiary account number
-            } else {
+            }    else if (bankDatabase.supportOverdrawn(getAccountNumber())){
+                                        screen.displayMessage("\nThis is Cheque account, the available overdrawn limit: 100000 \n");
+                                        screen.displayDollarAmount(bankDatabase.accountOverdrawnLimit(getAccountNumber()));
+                                        screen.displayMessageLine("");
+                                     }
+            else {
                 screen.displayMessageLine("\nAccount not found! Please try again.\n"); // Prompt for re-entry if invalid
             }
         }
