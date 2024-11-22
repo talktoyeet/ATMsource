@@ -3,6 +3,7 @@
 
 public abstract class Transaction
 {
+   private String state;
    private int accountNumber; // indicates account involved
    private Screen screen; // ATM's screen
    private BankDatabase bankDatabase; // account info database
@@ -34,6 +35,17 @@ public abstract class Transaction
       return bankDatabase;
    } // end method getBankDatabase
 
-   // perform the transaction (overridden by each subclass)
-   abstract public void execute();
+    // perform the transaction (overridden by each subclass)
+    public void execute() {
+
+    }
+
+    public void execute(int input) {
+
+   }
+
+   public String getState() {
+       return "";
+   }
+
 } // end class Transaction

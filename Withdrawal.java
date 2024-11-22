@@ -8,6 +8,9 @@ public class Withdrawal extends Transaction {
     private final static double MAX_WITHDRAWAL = 5000; // maximum cash that can be taken
     private static double ATM_RESERVE = 10000; // ATM reserve amount
 
+    //Withdrawal state
+    private String state;
+
     // Withdrawal constructor
     public Withdrawal(int userAccountNumber, Screen atmScreen, 
                       BankDatabase atmBankDatabase, Keypad atmKeypad, 
@@ -16,25 +19,64 @@ public class Withdrawal extends Transaction {
         super(userAccountNumber, atmScreen, atmBankDatabase);
         
         // initialize references to keypad and cash dispenser
+        this.state = "";
         keypad = atmKeypad;
         cashDispenser = atmCashDispenser;
     } // end Withdrawal constructor
 
     // perform transaction
-    public void execute() {
-    boolean cashDispensed = false; // cash was not dispensed yet
-    double availableBalance; // amount available for withdrawal
+    @Override
+    public void execute(int input) {
+        Screen screen = getScreen();
 
-    // get references to bank database and screen
-    BankDatabase bankDatabase = getBankDatabase(); 
-    Screen screen = getScreen();
+        if ("".equals(state)) {
+            this.state = "waitingChoice";
+            displayMenuOfAmounts();
+        } else if ("waitingChoice".equals(state)) {
+            int userChoice = 0; // local variable to store return value
 
-    // loop until cash is dispensed or the user cancels
-    do {
-        // obtain a chosen withdrawal amount from the user 
-        amount = displayMenuOfAmounts();
+            // array of amounts to correspond to menu numbers
+            int amounts[] = {0, 100, 500, 1000};
 
-        // check whether user chose a withdrawal amount or canceled
+            switch (input) {
+                case 1: // if the user chose a withdrawal amount
+                case 2: // (i.e., chose option 1, 2, 3, 4 or 5), return the
+                case 3: // corresponding amount from amounts array
+                    userChoice = amounts[input]; // save user's choice
+                    runWithdrawal(userChoice);
+                    break;
+                case 4: // user chose to input a preferred cash amount
+                    state = "waitingPreferredAmount";
+                    screen.clearScreen();
+                    screen.displayMessage("\n*Less or equal $5000*");
+                    screen.displayMessage("Enter your preferred cash amount (must be in $100, $ 500, or $1000 increments): ");
+                    break;
+                case CANCELED: // the user chose to cancel
+                    userChoice = CANCELED; // save user's choice
+                    break;
+                default: // the user did not enter a value from 1-6
+                    screen.clearScreen();
+                    screen.displayMessageLine("\nInvalid selection. Try again.");
+                    returnMainMenu();
+            }
+        } else if ("waitingPreferredAmount".equals(state)) {
+            int preferredAmount = checkPreferredCashAmount(input);
+            if (preferredAmount == 0){
+                screen.clearScreen();
+                screen.displayMessageLine("\nInvalid amount. Please enter a valid amount.");
+                returnMainMenu();
+            }
+            else runWithdrawal(preferredAmount);
+
+
+        }
+    }
+    private void runWithdrawal(int amount){
+        // get references to bank database and screen
+        BankDatabase bankDatabase = getBankDatabase();
+        Screen screen = getScreen();
+        boolean cashDispensed = false; // cash was not dispensed yet
+        double availableBalance; // amount available for withdrawal
         if (amount != CANCELED) {
             // get available balance of account involved
             availableBalance = bankDatabase.getAvailableBalance(getAccountNumber());
@@ -44,17 +86,16 @@ public class Withdrawal extends Transaction {
                 // Check if ATM reserve is sufficient
                 if (ATM_RESERVE < amount) {
                     // Not enough cash in the ATM reserve
+                    screen.clearScreen();
                     screen.displayMessageLine("\nATM cash not enough, now available ($" + ATM_RESERVE + ").");
-                    screen.displayMessageLine("You can take that amount or wait for replenishment.");
+                    screen.displayMessageLine("Please wait for replenishment.");
                     disableWithdrawals(); // Disable all withdrawals momentarily
                 } else if (cashDispenser.isSufficientCashAvailable(amount)) {
                     // Update ATM reserve after successful withdrawal
                     bankDatabase.debit(getAccountNumber(), amount);
                     dispenseCash(amount); // dispense cash
                     ATM_RESERVE -= amount; // decrease ATM reserve
-                    cashDispensed = true; // cash was dispensed
-                    
-                    // instruct user to take cash
+                    screen.clearScreen();
                     screen.displayMessageLine("\nPlease take your cash now.");
                 } else { // cash dispenser does not have enough cash
                     screen.displayMessageLine("\nInsufficient cash available in the ATM." +
@@ -68,7 +109,7 @@ public class Withdrawal extends Transaction {
             screen.displayMessageLine("\nCanceling transaction...");
             return; // return to main menu because user canceled
         }
-    } while (!cashDispensed);
+        returnMainMenu();
 }
 
     // dispense cash based on the amount
@@ -94,23 +135,13 @@ public class Withdrawal extends Transaction {
         getScreen().displayMessageLine(dispensedMessage.toString());
     }
 
-    private int getPreferredCashAmount() {
+    private int checkPreferredCashAmount(int input) {
         Screen screen = getScreen();
-        int preferredAmount = 0;
-
-        // Prompt user for their preferred cash amount
-        screen.displayMessage("\n*Less or equal $5000*");
-        screen.displayMessage("Enter your preferred cash amount (must be in $100, $ 500, or $1000 increments): ");
-        
-        // Get user input
-        preferredAmount = keypad.getPositiveInteger(); // Assume this method gets the input as an integer
-
         // Validate the preferred amount
-        if (preferredAmount > 0 && preferredAmount <= MAX_WITHDRAWAL && 
-            (preferredAmount % 100 == 0 || preferredAmount % 500 == 0 || preferredAmount % 1000 == 0)) {
-            return preferredAmount; // Return valid preferred amount
+        if (input > 0 && input <= MAX_WITHDRAWAL &&
+            (input % 100 == 0 || input % 500 == 0 || input % 1000 == 0)) {
+            return input; // Return valid preferred amount
         } else {
-            screen.displayMessageLine("\nInvalid amount. Please enter a valid amount.");
             return 0; // Return 0 to indicate invalid input
         }
     }
@@ -125,16 +156,8 @@ public class Withdrawal extends Transaction {
 
     // display a menu of withdrawal amounts and the option to cancel;
     // return the chosen amount or 0 if the user chooses to cancel
-    private int displayMenuOfAmounts() {
-        int userChoice = 0; // local variable to store return value
+    private void displayMenuOfAmounts() {
         Screen screen = getScreen(); // get screen reference
-        
-        // array of amounts to correspond to menu numbers
-        int amounts[] = {0, 100, 500, 1000};
-
-        // loop while no valid choice has been made
-        while (userChoice == 0) {
-            // display the menu
             screen.clearScreen();
             screen.displayMessageLine("Withdrawal Menu:");
             screen.displayMessageLine("\n1 - $100");
@@ -144,26 +167,17 @@ public class Withdrawal extends Transaction {
             screen.displayMessageLine("5 - Cancel transaction");
             screen.displayMessage("\nChoose a withdrawal amount: ");
 
-            int input = keypad.getPositiveInteger(); // get user input through keypad
-
-            // determine how to proceed based on the input value
-            switch (input) {
-                case 1: // if the user chose a withdrawal amount 
-                case 2: // (i.e., chose option 1, 2, 3, 4 or 5), return the
-                case 3: // corresponding amount from amounts array
-                    userChoice = amounts[input]; // save user's choice
-                    break;       
-                case 4: // user chose to input a preferred cash amount
-                    userChoice = getPreferredCashAmount(); // call method to get preferred amount
-                    break;
-                case CANCELED: // the user chose to cancel
-                    userChoice = CANCELED; // save user's choice
-                    break;
-                default: // the user did not enter a value from 1-6
-                    screen.displayMessageLine("\nInvalid selection. Try again.");
-            } // end switch
-        } // end while
-
-        return userChoice; // return withdrawal amount or CANCELED
     } // end method displayMenuOfAmounts
+
+    private void returnMainMenu(){
+        Screen screen = getScreen();
+        screen.displayMessageLine("Press enter to return to main menu");
+        GlobalState.ATMState = "returning";
+    }
+
+    @Override
+    public String getState() {
+        return state;
+    }
+
 } // end class Withdrawal

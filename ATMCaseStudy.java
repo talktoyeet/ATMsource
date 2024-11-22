@@ -9,9 +9,7 @@ public class ATMCaseStudy
    public static void main( String[] args )
    {
       ATMFrame.getInstance();
-      ATM theATM = new ATM();
-
-      theATM.run();
+      ATMFrame.run();
 
 
    } // end main

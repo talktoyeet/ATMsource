@@ -48,10 +48,8 @@ public class BalanceInquiry extends Transaction
         screen.displayPercentage( bankDatabase.getInterestRate( getAccountNumber() ) );
       }
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         throw new RuntimeException(e);
-      }
+      screen.displayMessage("\nPress Enter to return to the main menu.");
+
+
    } // end method execute
 } // end class BalanceInquiry

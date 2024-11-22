@@ -1,6 +1,6 @@
-// Keypad.java
 // Represents the keypad of the ATM
-import java.util.Scanner; // program uses Scanner to obtain user input
+
+import java.util.Scanner;
 
 public class Keypad {
     private Scanner input; // reads data from the command line
@@ -10,14 +10,28 @@ public class Keypad {
         input = new Scanner(System.in);
     } // end no-argument Keypad constructor
 
-    // return a positive integer value entered by user 
+    // return a positive integer value entered by user
     public int getPositiveInteger() {
-            return ATMFrame.getInt();
-    }// end method getPositiveInteger
+        while (true) {
+            String userInput = input.nextLine();
 
-    public void getTest(String input) {
-        System.out.println("Received input: " + input);
-    }
+            if (userInput.equalsIgnoreCase("q")) {
+                System.out.println("\nExiting the program.");
+                System.exit(0); // terminate the program
+            }
+
+            try {
+                int value = Integer.parseInt(userInput);
+                if (value >= -1) {
+                    return value; // return the positive integer
+                } else {
+                    System.out.println("Please enter a positive integer.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a positive integer.");
+            }
+        }
+    } // end method getPositiveInteger
 
     // return a positive decimal value entered by user with up to two decimal places
     public double getPositiveDecimal() {

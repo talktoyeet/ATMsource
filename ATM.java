@@ -1,7 +1,8 @@
-// ATM.java
-// Represents an automated teller machine
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class ATM 
+public class ATM
 {
    private boolean userAuthenticated; // whether user is authenticated
    private int currentAccountNumber; // current user's account number
@@ -17,79 +18,73 @@ public class ATM
    private static final int EXIT = 4;
 
    // no-argument ATM constructor initializes instance variables
-   public ATM() 
+   public ATM()
    {
       userAuthenticated = false; // user is not authenticated to start
       currentAccountNumber = 0; // no current account number to start
       screen = new Screen(); // create screen
-      keypad = new Keypad(); // create keypad 
+      keypad = new Keypad(); // create keypad
       cashDispenser = new CashDispenser(); // create cash dispenser
       bankDatabase = new BankDatabase(); // create acct info database
+      GlobalState.ATMState = "login"; // Change ui state to login
    } // end no-argument ATM constructor
 
-   // start ATM 
+   // start ATM
    public void run()
    {
-      // welcome and authenticate user; perform transactions
-      while ( true )
-      {
-         // loop while user is not yet authenticated
-         while ( !userAuthenticated )
-         {
-            screen.clearScreen();
-            screen.displayMessageLine( "Welcome!" );
-            authenticateUser(); // authenticate user
-         } // end while
-         
-         performTransactions(); // user is now authenticated 
-         userAuthenticated = false; // reset before next ATM session
-         currentAccountNumber = 0; // reset before next ATM session 
-         screen.displayMessageLine( "\nThank you! Goodbye!" );
-      } // end while   
+      screen.displayMessageLine( "\nWelcome!" );
+      screen.displayMessage( "\nPlease enter your account number: " );
+      //performTransactions(); // user is now authenticated
+      //userAuthenticated = false; // reset before next ATM session
+      //currentAccountNumber = 0; // reset before next ATM session
+      //GlobalState.ATMState = "login"; // reset UI state back to login
+      //screen.displayMessageLine( "\nThank you! Goodbye!" );
    } // end method run
 
    // attempts to authenticate user against database
-   private void authenticateUser() {
-      screen.displayMessage("\nPlease enter your account number: ");
+   private int accountNumber = 0;
+   private boolean isPinInput = false;
+   private void authenticateUser(int input)
+   {
+      if (!isPinInput) {
+         // Expecting account number input
+         accountNumber = input; // Set the account number from input
+         screen.displayMessage("\nEnter your PIN: ");
+         isPinInput = true; // Change state to expect PIN next
+      } else {
+         // Expecting PIN input
+         int pin = input; // Set the pin from input
 
-      int accountNumber = ATMFrame.getInt();// input account number
-      screen.displayMessage("\nEnter your PIN: "); // prompt for PIN
+         // Authenticate user with account number and pin
+         userAuthenticated = bankDatabase.authenticateUser(accountNumber, pin);
 
-      int pin = ATMFrame.getInt();
-      ;// input PIN
-
-      // set userAuthenticated to boolean value returned by database
-      userAuthenticated =
-              bankDatabase.authenticateUser(accountNumber, pin);
-
-      // check whether authentication succeeded
-      if (userAuthenticated) {
-         currentAccountNumber = accountNumber; // save user's account #
-      } // end if
-      else {
-         screen.clearScreen();
-         screen.displayMessageLine(
-                 "Invalid account number or PIN. Please try again.");
-         screen.displayMessageLine("Returning...");
-         try {
-            Thread.sleep(3000);
-         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+         // Check whether authentication succeeded
+         if (userAuthenticated) {
+            currentAccountNumber = accountNumber; // Save user's account #
+            screen.displayMessageLine("Authentication successful.");
+            accountNumber = 0; // Reset account number
+            isPinInput = false; // Reset flag for next authentication attempt
+            userAuthenticated = true; // Reset authentication status
+         } else {
+            screen.displayMessageLine("Invalid account number or PIN. Please try again.");
+            accountNumber = 0; // Reset account number
+            isPinInput = false; // Reset flag for next authentication attempt
+            userAuthenticated = false; // Reset authentication status
          }
       }
-   }// end method authenticateUser
+   } // end method authenticateUser
 
    // display the main menu and perform transactions
-   private void performTransactions() 
+   private void performTransactions()
    {
       // local variable to store transaction currently being processed
       Transaction currentTransaction = null;
-      
+
       boolean userExited = false; // user has not chosen to exit
 
       // loop while user has not chosen option to exit system
       while ( !userExited )
-      {     
+      {
          // show main menu and get user selection
          int mainMenuSelection = displayMainMenu();
 
@@ -97,33 +92,32 @@ public class ATM
          switch ( mainMenuSelection )
          {
             // user chose to perform one of three transaction types
-            case BALANCE_INQUIRY: 
+            case BALANCE_INQUIRY:
             case WITHDRAWAL:
             case TRANSFER:
 
                // initialize as new object of chosen type
-               currentTransaction = 
-                  createTransaction( mainMenuSelection );
+               currentTransaction =
+                       createTransaction( mainMenuSelection );
 
                currentTransaction.execute(); // execute transaction
-               break; 
+               break;
             case EXIT: // user chose to terminate session
                screen.displayMessageLine( "\nExiting the system..." );
                userExited = true; // this ATM session should end
                break;
             default: // user did not enter an integer from 1-4
-               screen.displayMessageLine( 
-                  "\nYou did not enter a valid selection. Try again." );
+               screen.displayMessageLine(
+                       "\nYou did not enter a valid selection. Try again." );
                break;
          } // end switch
       } // end while
    } // end method performTransactions
-   
+
    // display the main menu and return an input selection
    private int displayMainMenu()
    {
-      screen.clearScreen();
-      screen.displayMessageLine( "Main menu:" );
+      screen.displayMessageLine( "\nMain menu:" );
       screen.displayMessageLine( "1 - View my balance" );
       screen.displayMessageLine( "2 - Withdraw cash" );
       screen.displayMessageLine( "3 - Transfer" );
@@ -131,29 +125,42 @@ public class ATM
       screen.displayMessage( "Enter a choice: " );
       return keypad.getPositiveInteger(); // return user's selection
    } // end method displayMainMenu
-         
+
    // return object of specified Transaction subclass
-   private Transaction createTransaction( int type )
+   private Transaction createTransaction(int type )
    {
       Transaction temp = null; // temporary Transaction variable
-      
+
       // determine which type of Transaction to create     
       switch ( type )
       {
          case BALANCE_INQUIRY: // create new BalanceInquiry transaction
-            temp = new BalanceInquiry( 
-               currentAccountNumber, screen, bankDatabase );
+            temp = new BalanceInquiry(
+                    currentAccountNumber, screen, bankDatabase );
             break;
          case WITHDRAWAL: // create new Withdrawal transaction
-            temp = new Withdrawal( currentAccountNumber, screen, 
-               bankDatabase, keypad, cashDispenser );
+            temp = new Withdrawal( currentAccountNumber, screen,
+                    bankDatabase, keypad, cashDispenser );
             break;
          case TRANSFER:
             temp = new Transfer(
-                currentAccountNumber, screen, bankDatabase, keypad);
+                    currentAccountNumber, screen, bankDatabase, keypad);
             break;
       } // end switch
 
       return temp; // return the newly created object
    } // end method createTransaction
+
+
+   private void handler(String text){
+      if("login".equals(GlobalState.ATMState)) {
+          int input = 0;
+          try {
+              input = Integer.parseInt(text);
+          } catch (NumberFormatException e) {
+            return;
+          }
+          authenticateUser(input);
+      }
+   }
 } // end class ATM
