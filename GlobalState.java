@@ -1,5 +1,4 @@
 public class GlobalState {
     public static String ATMState = "";
-
-    public static String withdrawalState = "";
+    public static boolean allowDecimal = false;
 }

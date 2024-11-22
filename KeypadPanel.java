@@ -26,7 +26,7 @@ public class KeypadPanel extends JPanel {
         // Button 0
         numberButtons[0] = new JButton("0");
         numberButtons[0].addActionListener(actionListener);
-        
+
         // Button for decimal point
         numberButtons[10] = new JButton(".");
         numberButtons[10].addActionListener(actionListener);

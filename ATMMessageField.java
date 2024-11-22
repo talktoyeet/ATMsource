@@ -16,13 +16,13 @@ public class ATMMessageField extends JTextArea {
     }
 
     // Method to clear all messages
-    public void clearScreen(){
+    public void clearScreen() {
         this.selectAll();
         this.replaceSelection("");
     }
 
 
-    public ATMMessageField getDisplay(){
+    public ATMMessageField getDisplay() {
         return this;
     }
 }
