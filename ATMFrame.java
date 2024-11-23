@@ -18,6 +18,7 @@ public class ATMFrame extends JFrame implements ActionListener {
     private static ATMFrame instance;
     private static Screen screen; // ATM's screen
     private final Keypad keypad; // ATM's keypad
+    private final CardPanel cardPanel;
     private final CashDispenser cashDispenser; // ATM's cash dispenser
     private final BankDatabase bankDatabase; // account information database
     // Initiate variables
@@ -29,24 +30,27 @@ public class ATMFrame extends JFrame implements ActionListener {
 
     private ATMFrame() {
         keypadPanel = new KeypadPanel(this);
+        cardPanel = new CardPanel(this);
         // Set Frame dimension
-        this.setSize(600, 600);
-        this.setSize(500, 700); // Increased size for more space
+        this.setSize(700, 700); // Increased size for more space
         this.setLayout(null); // Use null layout
         this.setResizable(false);
         this.setBackground(Color.BLUE);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Set bounds for components
         messageField.setBounds(50, 50, 400, 300); // Large enough for approximately 15 lines
         messageField.setBackground(Color.BLUE);
         textField.setBounds(50, 360, 400, 50); // Positioned below the message field
         keypadPanel.setBounds(50, 420, 400, 200); // Positioned below the text field
+        cardPanel.setBounds(500, 360, 150, 150); // Adjusted position and size
+        //cardPanel.setBackground(Color.WHITE);
 
         // Add components
         this.add(messageField);
         this.add(textField);
         this.add(keypadPanel);
+        this.add(cardPanel);
+
 
         // Set visible
         this.setVisible(true);
@@ -58,11 +62,12 @@ public class ATMFrame extends JFrame implements ActionListener {
         keypad = new Keypad(); // create keypad
         cashDispenser = new CashDispenser(); // create cash dispenser
         bankDatabase = new BankDatabase(); // create acct info database
-        GlobalState.ATMState = "login"; // Change ui state to login
+        GlobalState.ATMState = "waitingCard"; // Change ui state to login
         screen.displayMessageLine("Welcome!");
         screen.displayMessageLine("Please insert your card");
 
         // Create a timer to display the account number prompt after 3 seconds (3000 milliseconds)
+        /**
         Timer timer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,6 +77,7 @@ public class ATMFrame extends JFrame implements ActionListener {
         });
         timer.setRepeats(false); // Only execute once
         timer.start(); // Start the timer
+         **/
     
     }
 
@@ -195,7 +201,10 @@ public class ATMFrame extends JFrame implements ActionListener {
                 screen.displayMessageLine("\nWelcome!");
                 screen.displayMessage("\nPlease enter your account number: ");
                 GlobalState.ATMState = "login";
-            } else {
+            } else if ("waitingCard".equals(GlobalState.ATMState)){
+
+            }
+                else {
                 GlobalState.allowDecimal = false;
                 displayMainMenu();
             }
@@ -216,6 +225,18 @@ public class ATMFrame extends JFrame implements ActionListener {
 
         } else if (source == keypadPanel.numberButtons[11]) { // "00" Button
             textField.appendInput("00"); // Append "00" to user input
+
+        } else if (source == cardPanel.insertCardButton){
+            System.out.println("aaa");
+            if ("waitingCard".equals(GlobalState.ATMState)){
+                screen.clearScreen();
+                screen.displayMessageLine("Card read successful!");
+                GlobalState.ATMState = "login"; // Change ui state to login
+            }
+        } else if (source == cardPanel.ejectCardButton){
+            screen.clearScreen();
+            screen.displayMessageLine("Ejecting card...");
+            GlobalState.ATMState = "waitingCard";
         }
     }
 
