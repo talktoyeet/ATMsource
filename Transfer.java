@@ -3,14 +3,12 @@ public class Transfer extends Transaction {
     private final static int CANCELED = 0;
     private String state = "";
     private double amount; // Amount to be transferred
-    private Keypad keypad; // Keypad for user input
     private int beneficiaryAccountNumber = 0;
 
     // Constructor to initialize the transfer transaction
-    public Transfer(int remitterAccountNumber, Screen atmScreen, BankDatabase atmBankDatabase, Keypad atmKeypad) {
+    public Transfer(int remitterAccountNumber, Screen atmScreen, BankDatabase atmBankDatabase) {
         // Initialize superclass variables
         super(remitterAccountNumber, atmScreen, atmBankDatabase);
-        this.keypad = atmKeypad; // Set the keypad for user input
     }
 
     // Execute the transfer process

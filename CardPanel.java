@@ -11,7 +11,7 @@ public class CardPanel extends JPanel {
         this.setLayout(new FlowLayout());
         //this.setBackground(Color.LIGHT_GRAY);
 
-        // Add action listner
+        // Add action listener
         insertCardButton.addActionListener(actionListener);
         ejectCardButton.addActionListener(actionListener);
 

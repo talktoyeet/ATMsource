@@ -17,7 +17,6 @@ public class ATMFrame extends JFrame implements ActionListener {
     // Static variable to hold the single instance of ATMFrame
     private static ATMFrame instance;
     private static Screen screen; // ATM's screen
-    private final Keypad keypad; // ATM's keypad
     private final CardPanel cardPanel;
     private final CashDispenser cashDispenser; // ATM's cash dispenser
     private final BankDatabase bankDatabase; // account information database
@@ -59,27 +58,21 @@ public class ATMFrame extends JFrame implements ActionListener {
         userAuthenticated = false; // user is not authenticated to start
         currentAccountNumber = 0; // no current account number to start
         screen = new Screen(); // create screen
-        keypad = new Keypad(); // create keypad
         cashDispenser = new CashDispenser(); // create cash dispenser
         bankDatabase = new BankDatabase(); // create acct info database
-        GlobalState.ATMState = "waitingCard"; // Change ui state to login
-        screen.displayMessageLine("Welcome!");
-        screen.displayMessageLine("Please insert your card");
-
-        // Create a timer to display the account number prompt after 3 seconds (3000 milliseconds)
-        /**
-        Timer timer = new Timer(3000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.displayMessage("Please enter your account number: ");
-                ((Timer)e.getSource()).stop(); // Stop the timer after it runs once
-            }
-        });
-        timer.setRepeats(false); // Only execute once
-        timer.start(); // Start the timer
-         **/
+        welcomeMessage();
     
     }
+
+
+    private void wait(int mSec) {
+        try {
+            Thread.sleep(mSec); // Wait for 3000 milliseconds (3 seconds)
+        } catch (InterruptedException e) {
+            e.printStackTrace(); // Handle the exception
+        }
+    }
+
 
     static void displayMainMenu() {
         GlobalState.ATMState = "Menu";
@@ -88,7 +81,7 @@ public class ATMFrame extends JFrame implements ActionListener {
         screen.displayMessageLine("1 - View my balance");
         screen.displayMessageLine("2 - Withdraw cash");
         screen.displayMessageLine("3 - Transfer");
-        screen.displayMessageLine("4 - Exit\n");
+        screen.displayMessageLine("Eject card to exit ATM\n");
         screen.displayMessage("Enter a choice: ");
 
     } // end method displayMainMenu
@@ -103,6 +96,17 @@ public class ATMFrame extends JFrame implements ActionListener {
     // Append MessageField
     public static void appendMessage(String text) {
         messageField.appendMessage(text);
+    }
+
+    public static void welcomeMessage() {
+        screen.clearScreen();
+        GlobalState.ATMState = "waitingCard"; // Change ui state to login
+        screen.displayMessageLine("Welcome!");
+        screen.displayMessageLine("Please insert your card");
+    }
+
+    public static void loginMessage() {
+        screen.displayMessage("Please Enter your account number: ");
     }
 
     private void authenticateUser(int input) {
@@ -150,21 +154,13 @@ public class ATMFrame extends JFrame implements ActionListener {
                 break;
             case WITHDRAWAL:
                 GlobalState.ATMState = "Withdrawal";
-                temp = new Withdrawal(currentAccountNumber, screen, bankDatabase, keypad, cashDispenser);
+                temp = new Withdrawal(currentAccountNumber, screen, bankDatabase, cashDispenser);
                 temp.execute(0);
                 break;
             case TRANSFER:
                 GlobalState.ATMState = "Transfer";
-                temp = new Transfer(currentAccountNumber, screen, bankDatabase, keypad);
+                temp = new Transfer(currentAccountNumber, screen, bankDatabase);
                 temp.execute(0);
-                break;
-            case EXIT: // user chose to terminate session
-                screen.clearScreen();
-                screen.displayMessageLine("\nExiting the system...");
-                screen.displayMessageLine("\nWelcome!");
-                screen.displayMessage("\nPlease enter your account number: ");
-                GlobalState.ATMState = "login";
-                userAuthenticated = false;
                 break;
             default: // user did not enter an integer from 1-4
                 screen.clearScreen();
@@ -190,21 +186,15 @@ public class ATMFrame extends JFrame implements ActionListener {
             if ("login".equals(GlobalState.ATMState)) {
                 GlobalState.allowDecimal = false;
                 screen.clearScreen();
-                screen.displayMessageLine("\nWelcome!");
-                screen.displayMessage("\nPlease enter your account number: ");
+                screen.displayMessage("Please enter your account number: ");
                 accountNumber = 0; // Reset account number
                 isPinInput = false; // Reset flag for next authentication attempt
                 userAuthenticated = false;
             } else if ("Menu".equals(GlobalState.ATMState)) {
-                GlobalState.allowDecimal = false;
-                screen.clearScreen();
-                screen.displayMessageLine("\nWelcome!");
-                screen.displayMessage("\nPlease enter your account number: ");
-                GlobalState.ATMState = "login";
-            } else if ("waitingCard".equals(GlobalState.ATMState)){
 
-            }
-                else {
+            } else if ("waitingCard".equals(GlobalState.ATMState)) {
+
+            } else {
                 GlobalState.allowDecimal = false;
                 displayMainMenu();
             }
@@ -226,19 +216,49 @@ public class ATMFrame extends JFrame implements ActionListener {
         } else if (source == keypadPanel.numberButtons[11]) { // "00" Button
             textField.appendInput("00"); // Append "00" to user input
 
-        } else if (source == cardPanel.insertCardButton){
+        } else if (source == cardPanel.insertCardButton) {
             System.out.println("aaa");
-            if ("waitingCard".equals(GlobalState.ATMState)){
+            if ("waitingCard".equals(GlobalState.ATMState)) {
                 screen.clearScreen();
                 screen.displayMessageLine("Card read successful!");
                 GlobalState.ATMState = "login"; // Change ui state to login
+                loginMessage();
             }
-        } else if (source == cardPanel.ejectCardButton){
-            screen.clearScreen();
-            screen.displayMessageLine("Ejecting card...");
-            GlobalState.ATMState = "waitingCard";
+        } else if (source == cardPanel.ejectCardButton) {
+            if (!"waitingCard".equals(GlobalState.ATMState)) {
+                startCardEjectTimer();
+
+            }
         }
     }
+
+    private void startCardEjectTimer() {
+        if (!"waitingCard".equals(GlobalState.ATMState)) {
+            // Display the initial message immediately
+            screen.clearScreen();
+            screen.displayMessageLine("Ejecting card...");
+
+            // Create a timer to execute actions after 3 seconds
+            Timer timer = new Timer(3000, x -> {
+                screen.clearScreen(); // Clear the screen after 3 seconds
+                screen.displayMessageLine("Remember to take your card!"); // Display this message
+
+                // Start another timer to wait before calling welcomeMessage
+                Timer welcomeTimer = new Timer(3000, y -> {
+                    welcomeMessage(); // Call welcomeMessage after another 3 seconds
+                });
+                welcomeTimer.setRepeats(false); // Ensure this timer only runs once
+                welcomeTimer.start(); // Start the welcome timer
+            });
+
+            timer.setRepeats(false); // Ensure the first timer only runs once
+            timer.start(); // Start the first timer
+            GlobalState.ATMState = "waitingCard"; // Update the state
+        }
+    }
+
+
+
 
     private void handler(String text) {
         System.out.println(GlobalState.ATMState);

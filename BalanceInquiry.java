@@ -31,8 +31,8 @@ public class BalanceInquiry extends Transaction {
 
         // display the balance information on the screen
         screen.clearScreen();
-        screen.displayMessageLine("\nBalance Information:");
-        screen.displayMessage(" - Account type: ");
+        screen.displayMessageLine("Balance Information:");
+        screen.displayMessage("\n - Account type: ");
         screen.displayMessage(accountType);
         screen.displayMessage("\n - Available balance: ");
         screen.displayDollarAmount(availableBalance);

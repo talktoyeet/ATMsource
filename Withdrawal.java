@@ -3,22 +3,20 @@ public class Withdrawal extends Transaction {
     private final static int CANCELED = 5;
     private final static double MAX_WITHDRAWAL = 5000; // maximum cash that can be taken
     private static double ATM_RESERVE = 10000; // ATM reserve amount
-    private int amount; // amount to withdraw
-    private Keypad keypad; // reference to keypad
+    private int amount; // amount to withdraw// reference to keypad
     private CashDispenser cashDispenser; // reference to cash dispenser
     //Withdrawal state
     private String state;
 
     // Withdrawal constructor
     public Withdrawal(int userAccountNumber, Screen atmScreen,
-                      BankDatabase atmBankDatabase, Keypad atmKeypad,
+                      BankDatabase atmBankDatabase,
                       CashDispenser atmCashDispenser) {
         // initialize superclass variables
         super(userAccountNumber, atmScreen, atmBankDatabase);
 
         // initialize references to keypad and cash dispenser
         this.state = "";
-        keypad = atmKeypad;
         cashDispenser = atmCashDispenser;
     } // end Withdrawal constructor
 
@@ -46,7 +44,7 @@ public class Withdrawal extends Transaction {
                 case 4: // user chose to input a preferred cash amount
                     state = "waitingPreferredAmount";
                     screen.clearScreen();
-                    screen.displayMessage("\n*Less or equal $5000*");
+                    screen.displayMessage("*Less or equal $5000*");
                     screen.displayMessage("Enter your preferred cash amount (must be in $100, $ 500, or $1000 increments): ");
                     break;
                 case CANCELED: // the user chose to cancel
@@ -54,14 +52,14 @@ public class Withdrawal extends Transaction {
                     break;
                 default: // the user did not enter a value from 1-6
                     screen.clearScreen();
-                    screen.displayMessageLine("\nInvalid selection. Try again.");
+                    screen.displayMessageLine("Invalid selection. Try again.");
                     returnMainMenu();
             }
         } else if ("waitingPreferredAmount".equals(state)) {
             int preferredAmount = checkPreferredCashAmount(input);
             if (preferredAmount == 0) {
                 screen.clearScreen();
-                screen.displayMessageLine("\nInvalid amount. Please enter a valid amount.");
+                screen.displayMessageLine("Invalid amount. Please enter a valid amount.");
                 returnMainMenu();
             } else runWithdrawal(preferredAmount);
 
@@ -85,7 +83,7 @@ public class Withdrawal extends Transaction {
                 if (ATM_RESERVE < amount) {
                     // Not enough cash in the ATM reserve
                     screen.clearScreen();
-                    screen.displayMessageLine("\nATM cash not enough, now available ($" + ATM_RESERVE + ").");
+                    screen.displayMessageLine("ATM cash not enough, now available ($" + ATM_RESERVE + ").");
                     screen.displayMessageLine("Please wait for replenishment.");
                     disableWithdrawals(); // Disable all withdrawals momentarily
                 } else if (cashDispenser.isSufficientCashAvailable(amount)) {
@@ -93,7 +91,7 @@ public class Withdrawal extends Transaction {
                     bankDatabase.debit(getAccountNumber(), amount);
                     ATM_RESERVE -= amount; // decrease ATM reserve
                     screen.clearScreen();
-                    screen.displayMessageLine("\nPlease take your cash now.");
+                    screen.displayMessageLine("Please take your cash now.");
                     dispenseCash(amount); // dispense cash
                 } else { // cash dispenser does not have enough cash
                     screen.displayMessageLine("\nInsufficient cash available in the ATM." +
@@ -124,7 +122,7 @@ public class Withdrawal extends Transaction {
         }
 
         // Display the dispensed amounts
-        StringBuilder dispensedMessage = new StringBuilder("\nDispensed:\n");
+        StringBuilder dispensedMessage = new StringBuilder("Dispensed:\n");
         for (int i = 0; i < counts.length; i++) {
             if (counts[i] > 0) {
                 dispensedMessage.append("$").append(denominations[i]).append(" x ").append(counts[i]).append("\n");
