@@ -3,12 +3,14 @@ public class Transfer extends Transaction {
     private final static int CANCELED = 0;
     private String state = "";
     private double amount; // Amount to be transferred
+    private Keypad keypad; // Keypad for user input
     private int beneficiaryAccountNumber = 0;
 
     // Constructor to initialize the transfer transaction
-    public Transfer(int remitterAccountNumber, Screen atmScreen, BankDatabase atmBankDatabase) {
+    public Transfer(int remitterAccountNumber, Screen atmScreen, BankDatabase atmBankDatabase, Keypad atmKeypad) {
         // Initialize superclass variables
         super(remitterAccountNumber, atmScreen, atmBankDatabase);
+        this.keypad = atmKeypad; // Set the keypad for user input
     }
 
     // Execute the transfer process
@@ -72,20 +74,14 @@ public class Transfer extends Transaction {
     }
 
     // Get the transfer amount from user input
-   private double checkTransferAmount(double input) {
+    private double checkTransferAmount(double input) {
         Screen screen = getScreen(); // Reference to the screen for displaying messages
         BankDatabase bankDatabase = getBankDatabase(); // Reference to bank database for balance check
         double availableBalance = bankDatabase.getAvailableBalance(getAccountNumber()); // Check available balance
-
-        // Check if the account is a ChequeAccount and enforce the transfer limit
-        if (bankDatabase.getAccount(getAccountNumber()) instanceof ChequeAccount && input > 10000) {
-            screen.displayMessageLine("\nCheque accounts cannot transfer more than $10,000.\n");
-            return -1; // Return -1 to indicate invalid transfer amount
-        }
-
         if (input > availableBalance) {
             screen.displayMessageLine("\nInsufficient balance\n"); // Notify user of insufficient funds
-            return -1; // Return -1 to indicate invalid transfer amount
+            returnMainMenu();
+            return 0;
         } else {
             return input; // Return valid transfer amount
         }
