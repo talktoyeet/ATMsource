@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 public class ATMFrame extends JFrame implements ActionListener {
     // Initiate components
@@ -59,7 +60,19 @@ public class ATMFrame extends JFrame implements ActionListener {
         bankDatabase = new BankDatabase(); // create acct info database
         GlobalState.ATMState = "login"; // Change ui state to login
         screen.displayMessageLine("Welcome!");
-        screen.displayMessage("Please enter your account number: ");
+        screen.displayMessageLine("Please insert your card");
+
+        // Create a timer to display the account number prompt after 3 seconds (3000 milliseconds)
+        Timer timer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                screen.displayMessage("Please enter your account number: ");
+                ((Timer)e.getSource()).stop(); // Stop the timer after it runs once
+            }
+        });
+        timer.setRepeats(false); // Only execute once
+        timer.start(); // Start the timer
+    
     }
 
     static void displayMainMenu() {
@@ -260,7 +273,7 @@ public class ATMFrame extends JFrame implements ActionListener {
             } else if ("waitingConfirmation".equals(temp.getState())) {
                 temp.execute(0);
             } else if ("waitingDoubleInput".equals(temp.getState())) {
-                double input = 0;
+                double input = 0.0;
                 try {
                     input = Double.parseDouble(text);
                 } catch (NumberFormatException e) {
@@ -272,8 +285,6 @@ public class ATMFrame extends JFrame implements ActionListener {
         }
     }
     
-    
-    
-
+   
 
 }
