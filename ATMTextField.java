@@ -3,7 +3,8 @@ import java.awt.*;
 
 public class ATMTextField extends JTextField {
 
-    String userInput = "";
+    private String userInput = "";
+    private boolean isPinInput = false; // Flag to indicate if we are in PIN input mode
 
     ATMTextField() {
         super();
@@ -15,19 +16,28 @@ public class ATMTextField extends JTextField {
         setForeground(Color.BLACK);
     }
 
-
     public void appendInput(String input) {
         userInput += input; // Append new input
-        setText(userInput); // Update text field display
+        if (isPinInput) {
+            setText("*".repeat(userInput.length())); // Display asterisks for PIN input
+        } else {
+            setText(userInput); // Display actual account number input
+        }
     }
 
     public void clearInput() {
         userInput = ""; // Clear stored input
-        this.setText("");
+        this.setText(""); // Clear the display
     }
 
     public String getUserInput() {
         return userInput; // Return current input as string
     }
 
+    public void setPinInputMode(boolean isPinInput) {
+        this.isPinInput = isPinInput; // Set the mode for PIN input
+        if (!isPinInput) {
+            clearInput(); // Clear input when switching back to account number mode
+        }
+    }
 }
