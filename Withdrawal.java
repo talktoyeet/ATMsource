@@ -91,14 +91,10 @@ public class Withdrawal extends Transaction {
                 } else if (cashDispenser.isSufficientCashAvailable(amount)) {
                     // Update ATM reserve after successful withdrawal
                     bankDatabase.debit(getAccountNumber(), amount);
-                    dispenseCash(amount); // dispense cash
                     ATM_RESERVE -= amount; // decrease ATM reserve
                     screen.clearScreen();
-                    screen.displayMessageLine("\nPlease take your card now.");
-                    screen.displayMessageLine("\nCard ejected.");
                     screen.displayMessageLine("\nPlease take your cash now.");
-                    screen.displayMessageLine("\nCash dispensed.");
-                
+                    dispenseCash(amount); // dispense cash
                 } else { // cash dispenser does not have enough cash
                     screen.displayMessageLine("\nInsufficient cash available in the ATM." +
                             "\n\nPlease choose a smaller amount.");
