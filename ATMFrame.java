@@ -87,36 +87,38 @@ public class ATMFrame extends JFrame implements ActionListener {
     }
 
     private void authenticateUser(int input) {
-        GlobalState.allowDecimal = false;
-        if (!isPinInput) {
-            // Expecting account number input
-            accountNumber = input; // Set the account number from input
-            screen.displayMessage("\nEnter your PIN: ");
-            isPinInput = true; // Change state to expect PIN next
+         GlobalState.allowDecimal = false;
+    if (!isPinInput) {
+        // Expecting account number input
+        accountNumber = input; // Set the account number from input
+        screen.displayMessage("\nEnter your PIN: ");
+        isPinInput = true; // Change state to expect PIN next
+        textField.setPinInputMode(true); // Set the text field to PIN input mode
+    } else {
+        // Expecting PIN input
+        int pin = input; // Set the pin from input
+
+        // Authenticate user with account number and pin
+        userAuthenticated = bankDatabase.authenticateUser (accountNumber, pin);
+
+        // Check whether authentication succeeded
+        if (userAuthenticated) {
+            currentAccountNumber = accountNumber; // Save user's account #
+            screen.displayMessageLine("Authentication successful.");
+            accountNumber = 0; // Reset account number
+            isPinInput = false; // Reset flag for next authentication attempt
+            textField.setPinInputMode(false); // Switch back to account number mode
+            displayMainMenu();
         } else {
-            // Expecting PIN input
-            int pin = input; // Set the pin from input
-
-            // Authenticate user with account number and pin
-            userAuthenticated = bankDatabase.authenticateUser(accountNumber, pin);
-
-            // Check whether authentication succeeded
-            if (userAuthenticated) {
-                currentAccountNumber = accountNumber; // Save user's account #
-                screen.displayMessageLine("Authentication successful.");
-                accountNumber = 0; // Reset account number
-                isPinInput = false; // Reset flag for next authentication attempt
-                userAuthenticated = true;
-                displayMainMenu();
-            } else {
-                screen.clearScreen();
-                screen.displayMessageLine("Invalid account number or PIN. Please try again.");
-                screen.displayMessage("\nPlease enter your account number: ");
-                accountNumber = 0; // Reset account number
-                isPinInput = false; // Reset flag for next authentication attempt
-                userAuthenticated = false; // Reset authentication status
-            }
+            screen.clearScreen();
+            screen.displayMessageLine("Invalid account number or PIN. Please try again.");
+            screen.displayMessage("\nPlease enter your account number: ");
+            accountNumber = 0; // Reset account number
+            isPinInput = false; // Reset flag for next authentication attempt
+            userAuthenticated = false; // Reset authentication status
+            textField.setPinInputMode(false); // Switch back to account number mode
         }
+    }
     }
 
     private void menuSelection(int choice) {
@@ -269,7 +271,9 @@ public class ATMFrame extends JFrame implements ActionListener {
             }
         }
     }
+    
+    
+    
 
 
 }
-
