@@ -72,14 +72,20 @@ public class Transfer extends Transaction {
     }
 
     // Get the transfer amount from user input
-    private double checkTransferAmount(double input) {
+   private double checkTransferAmount(double input) {
         Screen screen = getScreen(); // Reference to the screen for displaying messages
         BankDatabase bankDatabase = getBankDatabase(); // Reference to bank database for balance check
         double availableBalance = bankDatabase.getAvailableBalance(getAccountNumber()); // Check available balance
+
+        // Check if the account is a ChequeAccount and enforce the transfer limit
+        if (bankDatabase.getAccount(getAccountNumber()) instanceof ChequeAccount && input > 10000) {
+            screen.displayMessageLine("\nCheque accounts cannot transfer more than $10,000.\n");
+            return -1; // Return -1 to indicate invalid transfer amount
+        }
+
         if (input > availableBalance) {
             screen.displayMessageLine("\nInsufficient balance\n"); // Notify user of insufficient funds
-            returnMainMenu();
-            return 0;
+            return -1; // Return -1 to indicate invalid transfer amount
         } else {
             return input; // Return valid transfer amount
         }
