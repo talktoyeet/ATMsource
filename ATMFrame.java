@@ -217,7 +217,6 @@ public class ATMFrame extends JFrame implements ActionListener {
             textField.appendInput("00"); // Append "00" to user input
 
         } else if (source == cardPanel.insertCardButton) {
-            System.out.println("aaa");
             if ("waitingCard".equals(GlobalState.ATMState)) {
                 screen.clearScreen();
                 screen.displayMessageLine("Card read successful!");
@@ -238,22 +237,20 @@ public class ATMFrame extends JFrame implements ActionListener {
             screen.clearScreen();
             screen.displayMessageLine("Ejecting card...");
 
-            // Create a timer to execute actions after 3 seconds
             Timer timer = new Timer(3000, x -> {
-                screen.clearScreen(); // Clear the screen after 3 seconds
-                screen.displayMessageLine("Remember to take your card!"); // Display this message
+                screen.clearScreen();
+                screen.displayMessageLine("Remember to take your card!");
+                GlobalState.ATMState = "waitingCard";
 
-                // Start another timer to wait before calling welcomeMessage
                 Timer welcomeTimer = new Timer(3000, y -> {
-                    welcomeMessage(); // Call welcomeMessage after another 3 seconds
+                    welcomeMessage();
                 });
-                welcomeTimer.setRepeats(false); // Ensure this timer only runs once
-                welcomeTimer.start(); // Start the welcome timer
+                welcomeTimer.setRepeats(false);
+                welcomeTimer.start();
             });
 
             timer.setRepeats(false); // Ensure the first timer only runs once
             timer.start(); // Start the first timer
-            GlobalState.ATMState = "waitingCard"; // Update the state
         }
     }
 
