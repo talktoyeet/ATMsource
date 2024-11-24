@@ -70,8 +70,12 @@ public class BankDatabase {
 
 
     // credit an amount to Account with specified account number
-    public void credit(int userAccountNumber, double amount) {
-        getAccount(userAccountNumber).credit(amount);
+    public boolean credit(int userAccountNumber, double amount) {
+        boolean credited = getAccount(userAccountNumber).credit(amount);
+        if(!credited){
+            return false;
+        }
+        return true;
     } // end method credit
 
     // debit an amount from of Account with specified account number

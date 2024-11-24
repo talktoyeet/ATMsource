@@ -30,8 +30,12 @@ public class Transfer extends Transaction {
             }
         } else if ("waitingConfirmation".equals(state)) {
             screen.clearScreen();
-            confirmTransfer(beneficiaryAccountNumber, amount);
-            screen.displayMessageLine("Transfer Completed!");
+            if(confirmTransfer(beneficiaryAccountNumber, amount)) {
+                screen.displayMessageLine("Transfer Completed!");
+            }
+            else{
+                screen.displayMessageLine("The amount you are trying to transfer to have a cheque limit, please try a smaller amount or contact the account owner.");
+            }
             returnMainMenu();
         }
     }
@@ -86,12 +90,11 @@ public class Transfer extends Transaction {
     }
 
     // Confirm the transfer details with the user before proceeding
-    private void confirmTransfer(int beneficiaryAccountNumber, double amount) {
+    private boolean confirmTransfer(int beneficiaryAccountNumber, double amount) {
         BankDatabase bankDatabase = getBankDatabase(); // Reference to bank database for updating balances
 
         bankDatabase.debit(getAccountNumber(), amount); // Debit amount from remitter's account
-        bankDatabase.credit(beneficiaryAccountNumber, amount); // Credit amount to beneficiary's account
-
+        return bankDatabase.credit(beneficiaryAccountNumber, amount); // Credit amount to beneficiary's account
     }
 
     private void returnMainMenu() {

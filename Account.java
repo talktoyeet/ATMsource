@@ -38,8 +38,9 @@ public abstract class Account {
     } // end method getTotalBalance
 
     // credits an amount to the account
-    public void credit(double amount) {
-        totalBalance += amount; // add to total balance
+    public boolean credit(double amount) {
+        totalBalance += amount;
+        return true;
     } // end method credit
 
     // debits an amount from the account

@@ -14,14 +14,15 @@ public class SavingAccount extends Account {
 
     @Override
     public void debit(double amount) {
-        super.availableBalance -= amount;//subtract from available blance from superclass Account
-        super.totalBalance -= amount;//subtract from total blance from superclass Account
+        super.availableBalance -= amount;//subtract from available balance from superclass Account
+        super.totalBalance -= amount;//subtract from total balance from superclass Account
     }
 
     @Override
-    public void credit(double amount) {
-        super.availableBalance += amount;//subtract from available blance from superclass Account
-        super.totalBalance += amount;//subtract from total blance from superclass Account
+    public boolean credit(double amount) {
+        super.availableBalance += amount;//subtract from available balance from superclass Account
+        super.totalBalance += amount;//subtract from total balance from superclass Account
+        return true;
     }
 
     public double interest() {

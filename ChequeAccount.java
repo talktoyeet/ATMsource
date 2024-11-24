@@ -1,6 +1,5 @@
 public class ChequeAccount extends Account {
     private double chequeLimit;
-    private double chequeLimitAvilable;
 
     public ChequeAccount(int accountNumber, int pin, double availableBalance, double totalBalance, double limit) {
         super(accountNumber, pin, availableBalance, totalBalance); // Call the parent constructor
@@ -20,10 +19,7 @@ public class ChequeAccount extends Account {
 
     @Override
     public void debit(double amount) {
-        // Adjust the cheque limit based on the conditions using the ternary operator
-        chequeLimitAvilable = (amount > super.totalBalance)
-                ? ((amount - availableBalance) >= chequeLimitAvilable) ? 0 : chequeLimitAvilable - amount
-                : chequeLimitAvilable;
+
 
         // Subtract from available and total balance
         super.availableBalance -= amount; // Subtract from available balance
@@ -31,20 +27,14 @@ public class ChequeAccount extends Account {
     } // end method debit
 
     @Override
-    public void credit(double amount) {
-        // Adjust the cheque limit based on the condition using the ternary operator
-        chequeLimitAvilable = (super.totalBalance <= 0)
-                ? amount + chequeLimitAvilable
-                : chequeLimitAvilable;
-
+    public boolean credit(double amount) {
+        if(amount + totalBalance > chequeLimit){
+            return false;
+        }
         // Add to available and total balance
         super.availableBalance += amount; // Add to the available balance
         super.totalBalance += amount; // Add to the total balance
-
-        // Reset the cheque limit if it exceeds the maximum allowed
-        chequeLimitAvilable = (chequeLimitAvilable > chequeLimit)
-                ? chequeLimit
-                : chequeLimitAvilable; // Maintain the current value if within limit
+        return true;
     } // end method credit
 
 
