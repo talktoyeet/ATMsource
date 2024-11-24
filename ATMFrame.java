@@ -31,16 +31,16 @@ public class ATMFrame extends JFrame implements ActionListener {
         keypadPanel = new KeypadPanel(this);
         cardPanel = new CardPanel(this);
         // Set Frame dimension
-        this.setSize(700, 700); // Increased size for more space
+        this.setSize(750, 750); // Increased size for more space
         this.setLayout(null); // Use null layout
         this.setResizable(false);
         this.setBackground(Color.BLUE);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        messageField.setBounds(50, 50, 400, 300); // Large enough for approximately 15 lines
+        messageField.setBounds(50, 50, 400, 370); // Large enough for approximately 20 lines
         messageField.setBackground(Color.BLUE);
-        textField.setBounds(50, 360, 400, 50); // Positioned below the message field
-        keypadPanel.setBounds(50, 420, 400, 200); // Positioned below the text field
+        textField.setBounds(50, 380, 400, 50); // Positioned below the message field
+        keypadPanel.setBounds(50, 430, 400, 200); // Positioned below the text field
         cardPanel.setBounds(500, 360, 150, 150); // Adjusted position and size
         //cardPanel.setBackground(Color.WHITE);
 
