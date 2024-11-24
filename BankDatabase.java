@@ -68,6 +68,15 @@ public class BankDatabase {
         }
     }
 
+    public double getChequeLimit(int userAccountNumber) {
+        if (getAccount(userAccountNumber) instanceof ChequeAccount) {
+            ChequeAccount chequeAccount = (ChequeAccount) getAccount(userAccountNumber); // Downcasting
+            return chequeAccount.getChequeLimit(); // Call the method on the SavingAccount instance
+        } else {
+            throw new IllegalArgumentException("Account is not a Saving Account.");
+        }
+    }
+
 
     // credit an amount to Account with specified account number
     public boolean credit(int userAccountNumber, double amount) {

@@ -44,6 +44,12 @@ public class BalanceInquiry extends Transaction {
             screen.displayPercentage(bankDatabase.getInterestRate(getAccountNumber()));
         }
 
+        if (accountType.equals(chequeAccountClassName)) {
+            screen.displayMessage("\n - Current cheque account balance limit: ");
+            screen.displayDollarAmount(bankDatabase.getChequeLimit(getAccountNumber()));
+        }
+
+
         screen.displayMessage("\nPress Enter to return to the main menu.");
 
 
