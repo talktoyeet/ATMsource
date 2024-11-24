@@ -66,10 +66,8 @@ public class Transfer extends Transaction {
             screen.displayMessageLine("\nYou are not allowed to transfer to your own account\n");// Prevent self-transfer
         } else if (bankDatabase.accountExists(accountNumber)) {
             return accountNumber; // Return valid beneficiary account number
-        } else if (bankDatabase.supportOverdrawn(getAccountNumber())) {
-            screen.displayMessage("\nThis is Cheque account, the available overdrawn limit: 100000 \n");
-            screen.displayDollarAmount(bankDatabase.accountOverdrawnLimit(getAccountNumber()));
-        } else {
+        }
+         else {
             screen.displayMessageLine("\nAccount not found! Please try again.\n"); // Prompt for re-entry if invalid
         }
         return -1;
@@ -92,9 +90,10 @@ public class Transfer extends Transaction {
     // Confirm the transfer details with the user before proceeding
     private boolean confirmTransfer(int beneficiaryAccountNumber, double amount) {
         BankDatabase bankDatabase = getBankDatabase(); // Reference to bank database for updating balances
-
+        
+        boolean transfered = bankDatabase.credit(beneficiaryAccountNumber, amount); // Credit amount to beneficiary's account
         bankDatabase.debit(getAccountNumber(), amount); // Debit amount from remitter's account
-        return bankDatabase.credit(beneficiaryAccountNumber, amount); // Credit amount to beneficiary's account
+        return transfered;
     }
 
     private void returnMainMenu() {

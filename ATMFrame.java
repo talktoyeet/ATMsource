@@ -235,18 +235,13 @@ public class ATMFrame extends JFrame implements ActionListener {
         if (!"waitingCard".equals(GlobalState.ATMState)) {
             // Display the initial message immediately
             screen.clearScreen();
+            screen.displayMessageLine("Remember to take your card!\n\n");
             screen.displayMessageLine("Ejecting card...");
 
             Timer timer = new Timer(3000, x -> {
                 screen.clearScreen();
-                screen.displayMessageLine("Remember to take your card!");
+                welcomeMessage();
                 GlobalState.ATMState = "waitingCard";
-
-                Timer welcomeTimer = new Timer(3000, y -> {
-                    welcomeMessage();
-                });
-                welcomeTimer.setRepeats(false);
-                welcomeTimer.start();
             });
 
             timer.setRepeats(false); // Ensure the first timer only runs once

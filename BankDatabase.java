@@ -8,9 +8,9 @@ public class BankDatabase {
     public BankDatabase() {
         accounts = new Account[4]; // just 2 accounts for testing
         accounts[0] = new SavingAccount(23456, 65432, 20000, 25000, 5); //SavingAccount with 5% interest
-        accounts[1] = new SavingAccount(1, 1, 70000, 40000, 5);
-        accounts[2] = new ChequeAccount(34567, 76543, 20000, 25000, 10000); //ChequeAccount with limit 10000
-        accounts[3] = new ChequeAccount(2, 2, 93000, 34000, 10000);
+        accounts[1] = new SavingAccount(1, 1, 40000, 50000, 5);
+        accounts[2] = new ChequeAccount(34567, 76543, 20000, 25000, 50000); //ChequeAccount with limit 10000
+        accounts[3] = new ChequeAccount(2, 2, 50000, 50000, 100000);
 
     } // end no-argument BankDatabase constructor
 
@@ -82,15 +82,5 @@ public class BankDatabase {
     public void debit(int userAccountNumber, double amount) {
         getAccount(userAccountNumber).debit(amount);
     } // end method debit
-
-    public boolean supportOverdrawn(int userAccountNumber) {
-        return getAccount(userAccountNumber).hasLimitpercheque();
-    }
-
-    public double accountOverdrawnLimit(int userAccountNumber) {
-        if (supportOverdrawn(userAccountNumber)) {
-            return ((ChequeAccount) getAccount(userAccountNumber)).getChequeLimit();
-        } else return 0;
-    }
 
 } // end class BankDatabase
